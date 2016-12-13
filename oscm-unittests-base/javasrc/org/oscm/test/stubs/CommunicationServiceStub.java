@@ -42,7 +42,7 @@ public class CommunicationServiceStub implements CommunicationServiceLocal {
     }
 
     @Override
-    public String getMarketplaceUrl(String marketplaceId)
+    public String getMarketplaceUrl(String marketplaceId, String tenantId)
             throws MailOperationException {
         throw new UnsupportedOperationException();
     }

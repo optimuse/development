@@ -148,7 +148,7 @@ public class IdentityServiceBeanMailSendingTest {
         doReturn(BASE_URL).when(cs).getBaseURL();
         doReturn("baseUrl").when(cm).getBaseUrl();
         doReturn("baseUrl").when(cm).getBaseUrlWithTenant(anyString());
-        doReturn("marketplaceUrl").when(cm).getMarketplaceUrl(anyString());
+        doReturn("marketplaceUrl").when(cm).getMarketplaceUrl(anyString(), anyString());
         TriggerQueueServiceLocal triggerQS = mock(
                 TriggerQueueServiceLocal.class);
         idSrv.triggerQS = triggerQS;
@@ -171,7 +171,7 @@ public class IdentityServiceBeanMailSendingTest {
         pUser.setStatus(UserAccountStatus.LOCKED_NOT_CONFIRMED);
         idSrv.confirmAccount(new VOUser(), "1");
 
-        verify(cm, times(1)).getMarketplaceUrl(anyString());
+        verify(cm, times(1)).getMarketplaceUrl(anyString(), anyString());
     }
 
     @Test
@@ -225,7 +225,7 @@ public class IdentityServiceBeanMailSendingTest {
                 "abc", Long.valueOf(123L), new Marketplace());
 
         // verify '/marketplace' is contained by pwd confirmation mail URL
-        verify(cm, times(0)).getMarketplaceUrl(anyString());
+        verify(cm, times(0)).getMarketplaceUrl(anyString(), anyString());
         verify(cm, times(1)).sendMail(any(PlatformUser.class),
                 eq(EmailType.USER_CONFIRM),
                 argThat(getArrayContainsStringMatcher(MARKETPLACE_ROOT)),
@@ -247,7 +247,7 @@ public class IdentityServiceBeanMailSendingTest {
                 Long.valueOf(123L), new Marketplace());
 
         // verify '/marketplace' is contained by pwd confirmation mail URL
-        verify(cm, times(0)).getMarketplaceUrl(anyString());
+        verify(cm, times(0)).getMarketplaceUrl(anyString(), anyString());
         verify(cm, times(1)).sendMail(any(PlatformUser.class),
                 eq(EmailType.USER_CONFIRM),
                 argThat(getArrayContainsStringMatcher(
@@ -267,7 +267,7 @@ public class IdentityServiceBeanMailSendingTest {
                 Long.valueOf(123L), new Marketplace());
 
         // verify no '/marketplace' in pwd confirmation mail URL
-        verify(cm, times(0)).getMarketplaceUrl(anyString());
+        verify(cm, times(0)).getMarketplaceUrl(anyString(), anyString());
         verify(cm, times(1)).sendMail(any(PlatformUser.class),
                 eq(EmailType.USER_CONFIRM),
                 argThat(getArrayNotContainsStringMatcher(MARKETPLACE_ROOT)),
@@ -362,7 +362,7 @@ public class IdentityServiceBeanMailSendingTest {
                 Long.valueOf(123L), new Marketplace());
 
         // verify no '/marketplace' in user add mail URL
-        verify(cm, times(1)).getMarketplaceUrl(anyString());
+        verify(cm, times(1)).getMarketplaceUrl(anyString(), anyString());
     }
 
     @Test
@@ -397,7 +397,7 @@ public class IdentityServiceBeanMailSendingTest {
                 Long.valueOf(123L), new Marketplace());
 
         // verify no '/marketplace' in user add mail URL
-        verify(cm, times(1)).getMarketplaceUrl(anyString());
+        verify(cm, times(1)).getMarketplaceUrl(anyString(), anyString());
     }
 
     @Test
@@ -431,7 +431,7 @@ public class IdentityServiceBeanMailSendingTest {
                 new ArrayList<UserRoleType>(), "abc");
 
         // since NO manager, mail should NOT contain administration portal URL
-        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString());
+        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString(), anyString());
     }
 
     @Test
@@ -445,7 +445,7 @@ public class IdentityServiceBeanMailSendingTest {
                 "abc");
 
         // since NO manager, mail should NOT contain administration portal URL
-        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString());
+        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString(), anyString());
     }
 
     @Test
@@ -520,7 +520,7 @@ public class IdentityServiceBeanMailSendingTest {
         // assert that the the mail
         // should contain the context URL
         verify(idSrv.cm, times(0)).getBaseUrl();
-        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString());
+        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString(), anyString());
 
         // verify that mail parameters are correct
         ArgumentCaptor<Object[]> ac = ArgumentCaptor.forClass(Object[].class);
@@ -548,7 +548,7 @@ public class IdentityServiceBeanMailSendingTest {
         // assert that the the mail, since user is manager,
         // should contain the context URL
         verify(idSrv.cm, times(1)).getBaseUrl();
-        verify(idSrv.cm, times(0)).getMarketplaceUrl(anyString());
+        verify(idSrv.cm, times(0)).getMarketplaceUrl(anyString(), anyString());
 
         // verify that mail parameters are correct
         ArgumentCaptor<Object[]> ac = ArgumentCaptor.forClass(Object[].class);
@@ -576,7 +576,7 @@ public class IdentityServiceBeanMailSendingTest {
 
         // Both URLs must be contained
         verify(idSrv.cm, times(1)).getBaseUrl();
-        verify(idSrv.cm, times(1)).getMarketplaceUrl(eq("test"));
+        verify(idSrv.cm, times(1)).getMarketplaceUrl(eq("test"), anyString());
     }
 
     @Test
@@ -593,7 +593,7 @@ public class IdentityServiceBeanMailSendingTest {
 
         // Only administration portal URL is contained
         verify(idSrv.cm, times(1)).getBaseUrl();
-        verify(idSrv.cm, times(0)).getMarketplaceUrl((String) Mockito.isNull());
+        verify(idSrv.cm, times(0)).getMarketplaceUrl((String) Mockito.isNull(), (String) Mockito.isNull());
     }
 
     @Test
@@ -610,7 +610,7 @@ public class IdentityServiceBeanMailSendingTest {
 
         // Only administration portal URL
         verify(idSrv.cm, times(0)).getBaseUrl();
-        verify(idSrv.cm, times(1)).getMarketplaceUrl(eq("test"));
+        verify(idSrv.cm, times(1)).getMarketplaceUrl(eq("test"), anyString());
     }
 
     @Test
@@ -626,7 +626,7 @@ public class IdentityServiceBeanMailSendingTest {
         // assert that mail should contain
         // the administration portal URL and the context URL
         verify(idSrv.cm, times(1)).getBaseUrl();
-        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString());
+        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString(), anyString());
 
         // verify that mail parameters are correct
         ArgumentCaptor<Object[]> ac = ArgumentCaptor.forClass(Object[].class);
@@ -664,7 +664,7 @@ public class IdentityServiceBeanMailSendingTest {
 
         // then verify that mail parameters are correct
         verify(idSrv.cm, times(0)).getBaseUrl();
-        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString());
+        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString(), anyString());
 
         ArgumentCaptor<Object[]> ac = ArgumentCaptor.forClass(Object[].class);
         verify(cm, times(1)).sendMail(eq(pUser),
@@ -687,7 +687,7 @@ public class IdentityServiceBeanMailSendingTest {
 
         // then verify that mail parameters are correct
         verify(idSrv.cm, times(1)).getBaseUrlWithTenant(anyString());
-        verify(idSrv.cm, times(0)).getMarketplaceUrl(anyString());
+        verify(idSrv.cm, times(0)).getMarketplaceUrl(anyString(), anyString());
 
         ArgumentCaptor<Object[]> ac = ArgumentCaptor.forClass(Object[].class);
         verify(cm, times(1)).sendMail(eq(pUser),
@@ -715,7 +715,7 @@ public class IdentityServiceBeanMailSendingTest {
 
         // then verify that mail parameters are correct
         verify(idSrv.cm, times(1)).getBaseUrlWithTenant(anyString());
-        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString());
+        verify(idSrv.cm, times(1)).getMarketplaceUrl(anyString(), anyString());
 
         ArgumentCaptor<Object[]> ac = ArgumentCaptor.forClass(Object[].class);
         verify(cm, times(1)).sendMail(eq(pUser),

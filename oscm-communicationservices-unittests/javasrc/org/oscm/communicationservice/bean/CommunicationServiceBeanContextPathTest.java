@@ -57,13 +57,13 @@ public class CommunicationServiceBeanContextPathTest {
 
     @Test
     public void getMarketplaceUrl_Marketplace() throws Exception {
-        String url = commSrv.getMarketplaceUrl("abc");
+        String url = commSrv.getMarketplaceUrl("abc", null);
         assertEquals(BASE_URL + Marketplace.MARKETPLACE_ROOT + "?mId=abc", url);
     }
 
     @Test
     public void getMarketplaceUrl_Marketplace_NoMId() throws Exception {
-        String url = commSrv.getMarketplaceUrl(null);
+        String url = commSrv.getMarketplaceUrl(null, null);
         assertEquals(BASE_URL, url);
     }
 
@@ -77,7 +77,7 @@ public class CommunicationServiceBeanContextPathTest {
                         eq(ConfigurationKey.BASE_URL),
                         eq(Configuration.GLOBAL_CONTEXT));
         // when
-        String url = commSrv.getMarketplaceUrl("abc");
+        String url = commSrv.getMarketplaceUrl("abc", null);
 
         // then the ending slash of the base url is trailed.
         assertEquals(BASE_URL + Marketplace.MARKETPLACE_ROOT + "?mId=abc", url);
@@ -93,7 +93,7 @@ public class CommunicationServiceBeanContextPathTest {
                         eq(ConfigurationKey.BASE_URL),
                         eq(Configuration.GLOBAL_CONTEXT));
         // when
-        String url = commSrv.getMarketplaceUrl("abc");
+        String url = commSrv.getMarketplaceUrl("abc", null);
 
         // then the two ending slashes of the base url are trailed.
         assertEquals(BASE_URL + Marketplace.MARKETPLACE_ROOT + "?mId=abc", url);

@@ -136,7 +136,7 @@ public interface CommunicationServiceLocal {
      *             Thrown if an UnsupportedEncodingException occurs during the
      *             URL construction.
      */
-    public String getMarketplaceUrl(String marketplaceId)
+    public String getMarketplaceUrl(String marketplaceId, String tenantId)
             throws MailOperationException;
 
     /**

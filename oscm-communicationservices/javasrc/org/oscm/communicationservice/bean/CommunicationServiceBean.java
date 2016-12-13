@@ -263,7 +263,7 @@ public class CommunicationServiceBean implements CommunicationServiceLocal {
         }
     }
 
-    public String getMarketplaceUrl(String marketplaceId)
+    public String getMarketplaceUrl(String marketplaceId, String tenantId)
             throws MailOperationException {
         // send acknowledge e-mail
         StringBuffer url = new StringBuffer();
@@ -274,6 +274,9 @@ public class CommunicationServiceBean implements CommunicationServiceLocal {
                 url.append(org.oscm.types.constants.marketplace.Marketplace.MARKETPLACE_ROOT);
                 url.append("?mId=");
                 url.append(URLEncoder.encode(marketplaceId.trim(), ENCODING));
+            } else if (tenantId != null && !tenantId.trim().equals("")) {
+                url.append("?tenantID=");
+                url.append(URLEncoder.encode(tenantId.trim(), ENCODING));
             }
             return url.toString();
         } catch (UnsupportedEncodingException e) {

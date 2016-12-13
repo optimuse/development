@@ -315,10 +315,10 @@ public class CommunicationServiceBeanTest {
     @Test
     public void getMarketplaceUrl() throws Exception {
         assertEquals(baseUrl + "/marketplace?mId=marketplaceId",
-                commSrv.getMarketplaceUrl("marketplaceId"));
-        assertEquals(baseUrl, commSrv.getMarketplaceUrl(""));
-        assertEquals(baseUrl, commSrv.getMarketplaceUrl(null));
-        assertEquals(baseUrl, commSrv.getMarketplaceUrl("     "));
+                commSrv.getMarketplaceUrl("marketplaceId", null));
+        assertEquals(baseUrl, commSrv.getMarketplaceUrl("", null));
+        assertEquals(baseUrl, commSrv.getMarketplaceUrl(null, null));
+        assertEquals(baseUrl, commSrv.getMarketplaceUrl("     ", null));
     }
 
     /**

@@ -221,7 +221,7 @@ public class IdentityServiceBeanIT extends EJBTestBase {
             }
 
             @Override
-            public String getMarketplaceUrl(String marketplaceId) {
+            public String getMarketplaceUrl(String marketplaceId, String tenantId) {
                 return "?mId=" + MP_ID;
             }
         });

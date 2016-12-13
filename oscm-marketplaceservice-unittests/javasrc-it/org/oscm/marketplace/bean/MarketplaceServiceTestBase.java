@@ -211,7 +211,7 @@ public class MarketplaceServiceTestBase extends EJBTestBase {
             }
 
             @Override
-            public String getMarketplaceUrl(String marketplaceId)
+            public String getMarketplaceUrl(String marketplaceId, String tenantId)
                     throws MailOperationException {
                 return "myBaseUrl" + (marketplaceId == null
                         || marketplaceId.trim().length() == 0 ? ""

@@ -77,7 +77,7 @@ public class MarketplaceServiceLocalBeanSendMailTest {
         // once for marketplace administration URL
         verify(mpSrv.commService, times(1)).getBaseUrl();
         // once for public marketplace
-        verify(mpSrv.commService, times(1)).getMarketplaceUrl(eq("abc"));
+        verify(mpSrv.commService, times(1)).getMarketplaceUrl(eq("abc"), anyString());
     }
 
     /**

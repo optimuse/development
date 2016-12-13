@@ -488,7 +488,7 @@ public class MarketplaceServiceLocalBean implements MarketplaceServiceLocal {
             adminUrl = commService.getBaseUrl();
             adminUrl = addMarketplaceAdminPath(adminUrl);
             publicAccessUrl = commService.getMarketplaceUrl(domMp
-                    .getMarketplaceId());
+                    .getMarketplaceId(), null);
         } catch (MailOperationException e) {
             logger.logWarn(Log4jLogger.SYSTEM_LOG, e,
                     LogMessageIdentifier.WARN_RETRIEVE_MARKETPLACE_URL_FAILED,

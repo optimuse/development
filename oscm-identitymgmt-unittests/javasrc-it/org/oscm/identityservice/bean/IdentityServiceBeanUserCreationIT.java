@@ -144,7 +144,7 @@ public class IdentityServiceBeanUserCreationIT extends EJBTestBase {
 
         container.addBean(new CommunicationServiceStub() {
             @Override
-            public String getMarketplaceUrl(String marketplaceId)
+            public String getMarketplaceUrl(String marketplaceId, String tenantId)
                     throws MailOperationException {
                 return "";
             }
