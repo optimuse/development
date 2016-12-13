@@ -135,7 +135,7 @@ public class AccountServiceBeanRegisterCustomerIT extends EJBTestBase {
             }
 
             @Override
-            public String getMarketplaceUrl(String marketplaceId)
+            public String getMarketplaceUrl(String marketplaceId, String tenantId)
                     throws MailOperationException {
                 return "";
             }
