@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
   <managed-bean>
     <managed-bean-name>configurationBean</managed-bean-name>
-    <managed-bean-class>com.fujitsu.bss.app.igs.ui.ConfigurationBean</managed-bean-class>
+    <managed-bean-class>org.oscm.app.azure.ui.ConfigurationBean</managed-bean-class>
     <managed-bean-scope>request</managed-bean-scope>
   </managed-bean>
   <application>
@@ -13,7 +13,7 @@
       <supported-locale>en</supported-locale>
     </locale-config>
     <resource-bundle>
-      <base-name>com.fujitsu.bss.app.igs.i18n.messages</base-name>
+      <base-name>org.oscm.app.azure.i18n.messages</base-name>
       <var>msg</var>
     </resource-bundle>
   </application>
