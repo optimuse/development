@@ -109,7 +109,6 @@
     <dependency org="org.apache.sling" name="org.apache.sling.commons.json" rev="2.0.6" transitive="false"/>
     <dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false"/>
     <dependency org="log4j" name="log4j" rev="1.2.16" transitive="false"/>
-    <dependency org="commons-logging" name="commons-logging" rev="1.1.1" transitive="false"/>
     <dependency org="org.apache.lucene" name="lucene-analyzers-common" rev="5.3.1" transitive="false"/>
     <dependency org="org.apache.lucene" name="lucene-core" rev="5.3.1" transitive="false"/>
     <dependency org="org.apache.lucene" name="lucene-facet" rev="5.3.1" transitive="false"/>
@@ -482,6 +481,14 @@
     <dependency org="javax.xml" name="jaxrpc-api-osgi" rev="1.1-b01" transitive="false"/>
     <dependency org="org.jboss.logging" name="jboss-logging" rev="3.3.0.Final" transitive="false"/>
     <dependency org="com.fasterxml" name="classmate" rev="1.3.0" transitive="false"/>
+    <dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.13"/>
+    <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.13"/>
+    <dependency org="com.microsoft.azure" name="azure-core" rev="0.9.7"/>
+    <dependency org="com.microsoft.azure" name="azure-mgmt-resources" rev="0.9.7"/>
+    <dependency org="com.microsoft.azure" name="azure-mgmt-network" rev="0.9.7"/>
+    <dependency org="com.microsoft.azure" name="azure-mgmt-storage" rev="0.9.7"/>
+    <dependency org="com.microsoft.azure" name="azure-mgmt-compute" rev="0.9.7"/>
+    <dependency org="com.microsoft.azure" name="azure-storage" rev="4.4.0"/>
     <dependency org="org.jboss" name="jandex" rev="2.0.0.Final" transitive="false"/>
 
     <dependency org="org.glassfish.main.web" name="web-core" rev="4.1.1" transitive="false">
@@ -544,6 +551,8 @@
     <dependency org="wsdl4j" name="wsdl4j" rev="1.6.2" transitive="false"/>
     <dependency org="com.google.code.gson" name="gson" rev="2.6.2" transitive="false"/>
     <dependency org="org.ow2.asm" name="asm-debug-all" rev="5.1" transitive="false"/>
+    <dependency org="com.microsoft.azure" name="adal4j" rev="1.1.3" transitive="false"/>
+    <dependency org="com.nimbusds" name="oauth2-oidc-sdk" rev="5.20" transitive="false"/>
     
     <!-- AWS SDK 1.11.37-->
     <dependency org="com.amazonaws" name="aws-java-sdk-ec2" rev="1.11.37" transitive="false"/>
@@ -558,5 +567,6 @@
     <exclude org="org.netbeans.api"/>
     <exclude org="*" ext="*" type="source"/>
     <exclude org="*" ext="*" type="javadoc"/>
+    <conflict manager="all"/>
   </dependencies>
 </ivy-module>

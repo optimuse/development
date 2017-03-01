@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<tns:TechnicalServices xmlns:tns="fujitsu.adm.um.serviceprovisioning/1.7/TechnicalService.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="fujitsu.adm.um.serviceprovisioning/1.7/TechnicalService.xsd ../../fujitsu-adm-um-serviceprovisioning/javares/TechnicalServices.xsd">
+
+  <tns:TechnicalService id="FCIL_Sample" build="2014-10-06" provisioningType="ASYNCHRONOUS"
+    provisioningUrl="http://localhost:8880/ProvisioningService/AsynchronousProvisioningProxy?wsdl" provisioningVersion="1.0"
+    accessType="DIRECT" loginPath="Dynamically provided." baseUrl="">
+
+     
+	<AccessInfo locale="en"></AccessInfo>
+
+    <LocalizedDescription locale="en">Sample APP implementation.</LocalizedDescription>
+    <LocalizedDescription locale="de">Sample APP Implementierung.</LocalizedDescription>
+    <LocalizedLicense locale="en" />
+
+    <ParameterDefinition id="APP_CONTROLLER_ID" configurable="false" mandatory="true" valueType="STRING"
+      default="ess.sample">
+      <LocalizedDescription locale="en">The ID of the sample controller implementation.
+      </LocalizedDescription>
+    </ParameterDefinition>
+    <ParameterDefinition id="PARAM_MESSAGETEXT" configurable="true" mandatory="true" valueType="STRING"
+      default="Some message.">
+      <LocalizedDescription locale="en">The message text for emails.</LocalizedDescription>
+    </ParameterDefinition>
+    <ParameterDefinition id="PARAM_EMAIL" configurable="true" mandatory="true" valueType="STRING"
+      default="test@testmail.com">
+      <LocalizedDescription locale="en">The receiver of emails.</LocalizedDescription>
+    </ParameterDefinition>
+  </tns:TechnicalService>
+
+</tns:TechnicalServices>

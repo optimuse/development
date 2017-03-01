@@ -40,10 +40,22 @@
       <property name="projects" value="oscm-app-common,oscm-app-aws" />
     </ant>
   </target>
-	
+
+  <target name="Azure.BUILD"
+    description="Builds the AWS controller project, the result can be found in oscm-build/result/package/oscm-app-azure">
+    <ant dir="${adm.ue.buildscript.dir}" antfile="${adm.ue.buildscript.file}" target="package">
+      <property name="projects" value="oscm-app-azure" />
+    </ant>
+  </target>
+
   <target name="AWS.DEPLOY" description="Deploys the AWS build result into the APP domain">
     <delete file="${app.domain.apps}/oscm-app-aws/.glassfishStaleFiles" failonerror="false" />
     <deployOnAppDomain target="server" appl="${build.result.package.dir}/oscm-app-aws/oscm-app-aws.ear" />
+  </target>
+
+  <target name="Azure.DEPLOY" description="Deploys the Azure build result into the APP domain">
+    <delete file="${app.domain.apps}/oscm-app-azure/.glassfishStaleFiles" failonerror="false" />
+    <deployOnAppDomain target="server" appl="${build.result.package.dir}/oscm-app-azure/oscm-app-azure.ear" />
   </target>
 
   <target name="AWS.REDEPLOY" description="Redeploys the AWS build result into the APP domain">
@@ -52,8 +64,18 @@
       appl="${build.result.package.dir}/oscm-app-aws/oscm-app-aws.ear" appname="oscm-app-aws" />
   </target>
 
+  <target name="Azure.REDEPLOY" description="Redeploys the Azure build result into the APP domain">
+    <delete file="${app.domain.apps}/oscm-app-azure/.glassfishStaleFiles" failonerror="false" />
+    <redeployOnAppDomain target="server"
+      appl="${build.result.package.dir}/oscm-app-azure/oscm-app-azure.ear" appname="oscm-app-azure" />
+  </target>
+
   <target name="AWS.UNDEPLOY" description="Undeploys the AWS from the APP domain">
     <undeployFromAppDomain appl="oscm-app-aws" failonerror="false" />
+  </target>
+
+  <target name="Azure.UNDEPLOY" description="Undeploys the Azure from the APP domain">
+    <undeployFromAppDomain appl="oscm-app-azure" failonerror="false" />
   </target>
 
   <target name="AWS_Install.BUILD"
