@@ -4,7 +4,7 @@
 	<comment></comment>
 	<projects>
 		<project>oscm-app</project>
-		<project>oscm-app-azure-arm-controller</project>
+		<project>oscm-app-azure</project>
 		<project>oscm-app-ear</project>
 		<project>oscm-common</project>
 		<project>oscm-devruntime</project>

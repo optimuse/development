@@ -87,6 +87,15 @@
     </ant>
   </target>
 
+  <target name="Azure_Install.BUILD"
+    description="Builds the Azure install project, the result can be found in oscm-build/result/package/oscm-azure-install-pack">
+    <antcall target="APP.BUILD" />
+    <ant dir="${adm.ue.buildscript.dir}" antfile="${adm.ue.buildscript.file}" target="package">
+      <property name="projects"
+        value="oscm-app-common,oscm-app-azure,oscm-azure-install-pack" />
+    </ant>
+  </target>
+
   <target name="VMWare_Install.BUILD"
     description="Builds the VMware install project, the result can be found in oscm-build/result/package/oscm-vmware-install-pack">
     <antcall target="APP.BUILD" />
