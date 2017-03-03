@@ -97,7 +97,6 @@ public class ProxySettings {
         }
 
         String nonProxy = System.getProperty(HTTP_NON_PROXY_HOSTS);
-        //logger.debug("ProxySettings.useProxyByPass URL: {}, HOST: {}, NON_PROXY_HOSTS: {}", url, host, nonProxy);
         if (nonProxy != null) {
             String[] split = nonProxy.split("\\|");
             for (int i = 0; i < split.length; i++) {

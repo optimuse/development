@@ -116,17 +116,11 @@ public class AzureController implements APPlatformController {
                     + UUID.randomUUID().toString();
             PropertyHandler ph = new PropertyHandler(settings);
             ProvisioningValidator.validateParameters(ph);
-           // ph.setStartTime(String.valueOf(System.currentTimeMillis()));
             ph.setFlowState(FlowState.CREATION_REQUESTED);
-           /* ph.setResourceGroupName(ph.getResourceGroupName() + "_"
-                    + instanceId);*/
-
             // Return generated instance information
             InstanceDescription id = new InstanceDescription();
             id.setInstanceId(instanceId);
             id.setChangedParameters(settings.getParameters());
-            /*logger.info("createInstance({})", LogAndExceptionConverter
-                    .getLogText(id.getInstanceId(), settings));*/
             logger.info("exiting createInstance with id: "+id.getInstanceId());
             return id;
         } 
@@ -197,8 +191,6 @@ public class AzureController implements APPlatformController {
     public InstanceStatus modifyInstance(String instanceId,
             ProvisioningSettings currentSettings,
             ProvisioningSettings newSettings) throws APPlatformException {
-      /*  logger.info("modifyInstance({})", LogAndExceptionConverter.getLogText(
-                instanceId, currentSettings));*/
         try {
             PropertyHandler ph = new PropertyHandler(newSettings);
             ph.setStartTime(String.valueOf(System.currentTimeMillis()));
@@ -237,12 +229,8 @@ public class AzureController implements APPlatformController {
     public InstanceStatus getInstanceStatus(String instanceId,
             ProvisioningSettings settings) throws APPlatformException {
     	logger.info("Inside getInstanceStatus");
-       /* logger.debug("getInstanceStatus({})",
-                LogAndExceptionConverter.getLogText(instanceId, settings));*/
         try {
             PropertyHandler ph = new PropertyHandler(settings);
-           // ProvisioningValidator.validateTimeout(instanceId, ph);
-
             Dispatcher dp = new Dispatcher(platformService, instanceId, ph);
             InstanceStatus status = dp.dispatch();
             logger.info("exiting getInstanceStatus || isReady: "+status.isReady());
@@ -271,8 +259,6 @@ public class AzureController implements APPlatformController {
     public InstanceStatus notifyInstance(String instanceId,
             ProvisioningSettings settings, Properties properties)
             throws APPlatformException {
-    /*    logger.info("notifyInstance({})",
-                LogAndExceptionConverter.getLogText(instanceId, settings));*/
         InstanceStatus status = null;
         if (instanceId == null || settings == null || properties == null) {
             return status;
@@ -320,8 +306,6 @@ public class AzureController implements APPlatformController {
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public InstanceStatus activateInstance(String instanceId,
             ProvisioningSettings settings) throws APPlatformException {
-        /*logger.info("activateInstance({})",
-                LogAndExceptionConverter.getLogText(instanceId, settings));*/
         try {
             // Set status to store for application instance
             PropertyHandler ph = new PropertyHandler(settings);
@@ -357,8 +341,6 @@ public class AzureController implements APPlatformController {
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public InstanceStatus deactivateInstance(String instanceId,
             ProvisioningSettings settings) throws APPlatformException {
-        /*logger.info("deactivateInstance({})",
-                LogAndExceptionConverter.getLogText(instanceId, settings));*/
         try {
             // Set status to store for application instance
             PropertyHandler ph = new PropertyHandler(settings);
@@ -378,9 +360,6 @@ public class AzureController implements APPlatformController {
             String instanceId, String transactionId, String operationId,
             List<OperationParameter> parameters, ProvisioningSettings settings)
             throws APPlatformException {
-      /*  logger.info("executeServiceOperation({})",
-                LogAndExceptionConverter.getLogText(instanceId, settings)
-                        + " | OperationId: " + operationId);*/
         InstanceStatus status = null;
         if (instanceId == null || operationId == null || settings == null) {
             return status;
@@ -409,8 +388,6 @@ public class AzureController implements APPlatformController {
             return status;
         } catch (Throwable t) {
         	throw  t;
-            /*throw LogAndExceptionConverter.createAndLogPlatformException(t,
-                    Context.OPERATION);*/
         }
     }
 

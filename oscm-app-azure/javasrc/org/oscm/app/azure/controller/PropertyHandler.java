@@ -212,7 +212,6 @@ public class PropertyHandler {
      */
     public String getUserName() {
         return getValidatedProperty(settings.getConfigSettings(), API_USER_NAME);
-    	//return API_USER_NAMETest;
     }
 
     /**
@@ -231,9 +230,6 @@ public class PropertyHandler {
      * @return ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã�®é…�ç½®URL
      */
     public String getTemplateBaseUrl() {
-       /*String baseUrl = getValidatedProperty(settings.getConfigSettings(),
-                TEMPLATE_BASE_URL);
-        return baseUrl.endsWith("/") ? baseUrl : (baseUrl + "/");*/
     	return getValidatedProperty(settings.getParameters(), TEMPLATE_BASE_URL);
     }
 
@@ -246,8 +242,6 @@ public class PropertyHandler {
         return Long.parseLong(getValidatedProperty(
                 settings.getConfigSettings(), READY_TIMEOUT));
     }
-
-    /* æŠ€è¡“ã‚µãƒ¼ãƒ“ã‚¹å®šç¾©ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ */
 
     /**
      * æ‰‹å‹•æ“�ä½œãƒ¡ãƒ¼ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å�–å¾—ã€‚
@@ -266,7 +260,6 @@ public class PropertyHandler {
      */
     public String getSubscriptionId() {
         return getValidatedProperty(settings.getParameters(), SUBSCRIPTION_ID);
-    	//return SUBSCRIPTION_IDTest;
     }
 
     /**
@@ -276,7 +269,6 @@ public class PropertyHandler {
      */
     public String getTenantId() {
         return getValidatedProperty(settings.getParameters(), TENANT_ID);
-    	//return TENANT_IDTest;
     }
 
     /**
@@ -286,7 +278,6 @@ public class PropertyHandler {
      */
     public String getClientId() {
        return getValidatedProperty(settings.getParameters(), CLIENT_ID);
-    	//return CLIENT_IDTest;
     }
 
     /**
@@ -296,7 +287,6 @@ public class PropertyHandler {
      */
     public String getClientSecret() {
         return settings.getParameters().get(CLIENT_SECRET);
-    	//return CLIENT_SECRETTest;
     }
 
     /**

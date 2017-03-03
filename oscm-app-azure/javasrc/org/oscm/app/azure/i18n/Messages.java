@@ -30,7 +30,7 @@ import org.oscm.app.v1_0.data.LocalizedText;
  */
 public class Messages {
 
-    private static final String BUNDLE_NAME = "org.oscm.app.azure.i18n.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.oscm.app.azure.i18n.messages";
 
     public static final String DEFAULT_LOCALE = "en";
 

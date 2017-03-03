@@ -7,10 +7,9 @@
  *******************************************************************************/
 package org.oscm.app.azure.exception;
 
+import com.microsoft.windowsazure.exception.ServiceException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-
-import com.microsoft.windowsazure.exception.ServiceException;
 
 public class AzureServiceException extends AzureClientException {
 
@@ -76,8 +75,6 @@ public class AzureServiceException extends AzureClientException {
                 this.errorCode = ex.getError().getCode();
                 this.errorMessage = ex.getError().getMessage();
             } else if (ex.getMessage() != null) {
-                // SDK ã�®ä»•æ§˜ã�«ã‚ˆã‚Šã€�ä¸Šè¨˜ã�§å�–å¾—ã�§ã��ã�ªã�„å ´å�ˆ message ã�‹ã‚‰æŠ½å‡º
-                // azure-sdk-for-java/v0.9.3/ServiceException.java line: 261
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
                     JsonNode responseDoc = objectMapper.readTree(ex

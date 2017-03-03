@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+
 import org.oscm.app.azure.i18n.Messages;
 
 public class AccessInfo {

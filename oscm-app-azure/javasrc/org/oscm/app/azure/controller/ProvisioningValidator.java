@@ -31,11 +31,8 @@ public class ProvisioningValidator {
             .getLogger(ProvisioningValidator.class);
 
     /**
-     *
-     *
-     * @param ph
-     *            a property handler for reading and writing service parameters
-     *            and controller configuration settings
+     * @param ph a property handler for reading and writing service parameters
+     *           and controller configuration settings
      * @throws APPlatformException
      */
     public static void validateParameters(PropertyHandler ph)
@@ -43,7 +40,7 @@ public class ProvisioningValidator {
         String resourceGroupName = ph.getResourceGroupName();
         if (StringUtils.isBlank(resourceGroupName)) {
             throw new APPlatformException(Messages.getAll("error_invalid_name",
-                    new Object[] { resourceGroupName }));
+                    new Object[]{resourceGroupName}));
         }
         String regex = "^[^_\\W][\\w-._]{1,29}";
         Matcher m = Pattern.compile(regex).matcher(resourceGroupName);
@@ -51,7 +48,7 @@ public class ProvisioningValidator {
             logger.error("Validation error on resource group name: ["
                     + resourceGroupName + "/" + regex + "]");
             throw new APPlatformException(Messages.getAll("error_invalid_name",
-                    new Object[] { resourceGroupName }));
+                    new Object[]{resourceGroupName}));
         }
 
         AzureCommunication azureCom = new AzureCommunication(ph);
@@ -61,29 +58,16 @@ public class ProvisioningValidator {
             logger.error("Validation error on region: [" + region + "/"
                     + StringUtils.join(regions, ", ") + "]");
             throw new APPlatformException(Messages.getAll(
-                    "error_invalid_region", new Object[] { region }));
+                    "error_invalid_region", new Object[]{region}));
         }
     }
 
     /**
-     * 
-     *
-     * @param ph
-     *            a property handler for reading and writing service parameters
-     *            and controller configuration settings
-     * @throws SuspendException
-     *             if the request timeout
-     * @throws AuthenticationException
-     *             if the authentication of the user fails
-     * @throws ConfigurationException
-     *             if the configuration settings cannot be loaded
-     * @throws APPlatformException
-     *             if a general problem occurs in accessing APP
+     * @param ph a property handler for reading and writing service parameters
+     *           and controller configuration settings
+     * @throws APPlatformException     if a general problem occurs in accessing APP
      */
-    public static void validateTimeout(String instanceId, PropertyHandler ph)
-            throws SuspendException, AuthenticationException,
-            ConfigurationException, APPlatformException {
-        long readyTimeout = ph.getReadyTimeout();
+    public static void validateTimeout(PropertyHandler ph) throws APPlatformException {
         if (ph.getStartTime() == null) {
             throw new RuntimeException(
                     "Controller must be set the start time at the beginning of the request");
@@ -92,19 +76,5 @@ public class ProvisioningValidator {
             ph.setStartTime(String.valueOf(System.currentTimeMillis()));
             return;
         }
-        long startTime = Long.parseLong(ph.getStartTime());
-        long currentTime = System.currentTimeMillis();
-       /* logger.debug(
-                "ExecutionTime: {}ms (StartTime: {}ms, CurrentTime: {}ms), ReadyTimeout: {}ms",
-                currentTime - startTime, startTime, currentTime, readyTimeout);
-        if (currentTime - startTime > readyTimeout) {
-            logger.error("Request timeout, over {}ms", currentTime - startTime);
-            ph.setStartTime("suspended");
-            APPlatformServiceFactory.getInstance().storeServiceInstanceDetails(
-                    AzureController.ID, instanceId, ph.getSettings(),
-                    ph.getTPAuthentication());
-            throw new SuspendException(Messages.getAll("error_ready_timeout",
-                    readyTimeout));
-        }*/
     }
 }

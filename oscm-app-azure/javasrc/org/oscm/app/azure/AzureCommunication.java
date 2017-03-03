@@ -22,25 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javax.naming.ServiceUnavailableException;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.oscm.app.azure.controller.PropertyHandler;
-import org.oscm.app.azure.data.AccessInfo;
-import org.oscm.app.azure.data.AzureAccess;
-import org.oscm.app.azure.data.AzureState;
-import org.oscm.app.azure.data.PowerState;
-import org.oscm.app.azure.exception.AzureClientException;
-import org.oscm.app.azure.exception.AzureServiceException;
-import org.oscm.app.azure.i18n.Messages;
-import org.oscm.app.azure.proxy.ProxyAuthenticator;
-import org.oscm.app.azure.proxy.ProxySettings;
-import org.oscm.app.v1_0.exceptions.AbortException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.microsoft.aad.adal4j.AuthenticationContext;
@@ -79,6 +61,23 @@ import com.microsoft.windowsazure.Configuration;
 import com.microsoft.windowsazure.core.utils.BOMInputStream;
 import com.microsoft.windowsazure.exception.ServiceException;
 import com.microsoft.windowsazure.management.configuration.ManagementConfiguration;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.oscm.app.azure.controller.PropertyHandler;
+import org.oscm.app.azure.data.AccessInfo;
+import org.oscm.app.azure.data.AzureAccess;
+import org.oscm.app.azure.data.AzureState;
+import org.oscm.app.azure.data.PowerState;
+import org.oscm.app.azure.exception.AzureClientException;
+import org.oscm.app.azure.exception.AzureServiceException;
+import org.oscm.app.azure.i18n.Messages;
+import org.oscm.app.azure.proxy.ProxyAuthenticator;
+import org.oscm.app.azure.proxy.ProxySettings;
+import org.oscm.app.v1_0.exceptions.AbortException;
 
 public class AzureCommunication {
 
@@ -410,11 +409,6 @@ public class AzureCommunication {
 		try {
 			deploymentTemplate("create");
 		} catch (Exception e) {
-			/** try {
-                resourceClient.getResourceGroupsOperations().delete(ph.getResourceGroupName());
-            } catch (Exception e1) {
-
-            }*/
 			throw createAndLogAzureException("Template Deployment failed: "
 					+ e.getMessage(), e);
 		}
@@ -566,7 +560,6 @@ public class AzureCommunication {
 	{
 		//Deleting VM Container
 		logger.info("Deleting VM Container inside Storage Account: "+ph.getStorageAccount());
-		//storageAccountName=machine.getStorageProfile().getOSDisk().getVirtualHardDisk().getUri().split("//")[1].split("\\.")[0];
 		String key1=storageClient.getStorageAccountsOperations().listKeys(ph.getResourceGroupName(), ph.getStorageAccount()).getStorageAccountKeys().getKey1();
 
 		String connectionString = "DefaultEndpointsProtocol=https;AccountName="+ph.getStorageAccount()+";AccountKey="+key1+";";
@@ -948,17 +941,6 @@ public class AzureCommunication {
 				vmList.add(computeClient.getVirtualMachinesOperations().get(ph.getResourceGroupName(), ph.getVMName()).getVirtualMachine());
 			}
 			logger.info("Size of final VM list : "+vmList.size());
-
-			/**ArrayList<VirtualMachine> vms=computeClient.getVirtualMachinesOperations().list(ph.getResourceGroupName()).getVirtualMachines();
-    		for(VirtualMachine vm:vms)
-    		{
-    			if(vm.getName().equalsIgnoreCase(ph.getVMName()))
-    			{
-    				vmList.add(vm);
-    				logger.info("size of final VM list : "+vmList.size());
-    				return vmList;
-    			}
-    		}*/
 			return vmList;
 		} catch (IOException | URISyntaxException | ServiceException e) {
 			throw createAndLogAzureException("Get virtual machines failed: "

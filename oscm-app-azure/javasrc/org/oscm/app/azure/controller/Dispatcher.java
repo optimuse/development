@@ -144,8 +144,7 @@ public class Dispatcher {
                 break;
 
             default:
-                // DESTROYED, FAILED, MANUAL
-                // å‡¦ç�†ã�ªã�—ã€‚
+
             }
         } catch (APPlatformException e) {
             logger.warn("Azure platform reported error", e);
@@ -178,8 +177,6 @@ public class Dispatcher {
         // is the case, APP stops polling for the instance status.
         status.setIsReady(ph.getFlowState() == FlowState.FINISHED
                 || ph.getFlowState() == FlowState.DESTROYED);
-
-        //status.setRunWithTimer(ph.getFlowState() != FlowState.MANUAL);
 
         // Update the description of the instance status.
         // This description is displayed to users for a pending
@@ -473,8 +470,6 @@ public class Dispatcher {
             return;
         }
 
-      /*  logger.debug("  mail: {}, subject: {}, text: {}",
-                ph.getMailForCompletion(), subject, text);*/
         platformService.sendMail(
                 Collections.singletonList(ph.getMailForCompletion()), subject,
                 text);
