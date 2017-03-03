@@ -51,10 +51,7 @@ public class ProxySettings {
     public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
 
     /**
-     * ãƒ—ãƒ­ã‚­ã‚·ã�®è¨­å®šã�Œå¿…è¦�ã�‹åˆ¤å®šã€‚
-     *
-     * @param url
-     * @return ãƒ—ãƒ­ã‚­ã‚·è¨­å®šã�Œå¿…è¦�ã�ªå ´å�ˆ<code>true</code>ã€�ä¸�è¦�ã�®å ´å�ˆ<code>false</code>
+     * Azure
      */
     public static boolean useProxy(String url) {
         if (useProxyHost() && !useProxyByPass(url)) {
@@ -66,9 +63,7 @@ public class ProxySettings {
     }
 
     /**
-     * ãƒ—ãƒ­ã‚­ã‚·ã�®è¨­å®šã�Œã�‚ã‚‹ã�‹åˆ¤å®šã€
-     *
-     * @return ãƒ—ãƒ­ã‚­ã‚·è¨­å®šã�Œã�‚ã‚‹å ´å�ˆ<code>true</code>ã€�ã�ªã�„å ´å�ˆ<code>false</code>
+     * Azure
      */
     private static boolean useProxyHost() {
         String proxyHost = System.getProperty(HTTPS_PROXY_HOST);
@@ -82,11 +77,7 @@ public class ProxySettings {
     }
 
     /**
-     * ãƒ—ãƒ­ã‚­ã‚·ã�®è¨­å®šã�Œå¿…è¦�ã�ªURLã�‹åˆ¤å®šã€‚
-     *
-     * @param url
-     *            http:// ã�¾ã�Ÿã�¯ https:// ã�§å§‹ã�¾ã‚‹URL
-     * @return ãƒ—ãƒ­ã‚­ã‚·è¨­å®šã�Œå¿…è¦�ã�ªURLã�®å ´å�ˆ<code>true</code>ã€�ä¸�è¦�ã�®å ´å�ˆ<code>false</code>
+     * Azure
      */
     private static boolean useProxyByPass(String url) {
         String host;
@@ -129,9 +120,7 @@ public class ProxySettings {
     }
 
     /**
-     * ãƒ—ãƒ­ã‚­ã‚·ã‚’å�–å¾—ã€‚
-     *
-     * @return <code>java.net.Proxy</code>
+     * Azure
      */
     public static Proxy getProxy(String url) {
         Proxy proxy = Proxy.NO_PROXY;

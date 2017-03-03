@@ -18,41 +18,33 @@ import org.oscm.app.azure.i18n.Messages;
 public class AccessInfo {
 
     /**
-     * ã‚¢ã‚¯ã‚»ã‚¹æƒ…å ±ã€
+     * Azure
      */
     private List<AzureAccess> azureAccesses;
 
     /**
-     * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚
+     * Azure
      */
     public AccessInfo() {
         this.azureAccesses = new ArrayList<>();
     }
 
     /**
-     * ã‚¢ã‚¯ã‚»ã‚¹æƒ…å ±ã‚’å�–å¾—ã€‚
-     *
-     * @return ã‚¢ã‚¯ã‚»ã‚¹æƒ…å ±
+     * Azure
      */
     public List<AzureAccess> getAzureAccesses() {
         return azureAccesses;
     }
 
     /**
-     * ã‚¢ã‚¯ã‚»ã‚¹æƒ…å ±ã‚’è¨­å®šã€‚
-     *
-     * @param ã‚¢ã‚¯ã‚»ã‚¹æƒ…å ±
+     * Azure
      */
     public void setAzureAccesses(List<AzureAccess> azureAccesses) {
         this.azureAccesses = azureAccesses;
     }
 
     /**
-     * å‡ºåŠ›æƒ…å ±ã‚’å�–å¾—ã€‚
-     *
-     * @param locale
-     *            å‡ºåŠ›ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã�®è¨€èªž
-     * @return å‡ºåŠ›æƒ…å ±
+     * Azure
      */
     public String getOutput(String locale) {
         if (azureAccesses == null || azureAccesses.isEmpty()) {

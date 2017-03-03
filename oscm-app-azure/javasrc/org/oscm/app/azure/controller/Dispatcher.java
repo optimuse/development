@@ -196,8 +196,6 @@ public class Dispatcher {
     }
 
     /**
-     * é…�å‚™å‡¦ç�†ã�®ç®¡ç�†ã€‚
-     *
      * @param flowState
      *            current <code>FlowState</code>
      * @param status
@@ -312,8 +310,6 @@ public class Dispatcher {
     }
 
     /**
-     * æ“�ä½œå‡¦ç�†ã�®ç®¡ç�†ã€‚
-     *
      * @param flowState
      *            current <code>FlowState</code>
      * @param status
@@ -376,10 +372,6 @@ public class Dispatcher {
     }
 
     /**
-     * ã‚¢ã‚¯ãƒ†ã‚£ãƒ™ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç�†ã�®ç®¡ç�†ã€‚
-     * <p>
-     * Azureã�§ã�¯è©²å½“å‡¦ç�†ã�Œå­˜åœ¨ã�—ã�ªã�„ã�Ÿã‚�ã€�æ“�ä½œå‡¦ç�†ã�«ç§»ã‚‹ã€‚
-     *
      * @param flowState
      *            current <code>FlowState</code>
      * @param status
@@ -409,8 +401,6 @@ public class Dispatcher {
     }
 
     /**
-     * æ‰‹å‹•å‡¦ç�†ã�®ç®¡ç�†ã€‚
-     *
      * @param flowState
      *            current <code>FlowState</code>
      * @param status

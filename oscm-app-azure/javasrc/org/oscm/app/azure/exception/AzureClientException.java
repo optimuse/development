@@ -15,8 +15,6 @@ public class AzureClientException extends RuntimeException {
     private static final long serialVersionUID = -5369307665782818572L;
 
     /**
-     * コンストラクタ。
-     *
      * @param message
      * @param cause
      */
@@ -25,8 +23,6 @@ public class AzureClientException extends RuntimeException {
     }
 
     /**
-     * コンストラクタ。
-     *
      * @param message
      */
     public AzureClientException(String message) {
@@ -34,8 +30,6 @@ public class AzureClientException extends RuntimeException {
     }
 
     /**
-     * コンストラクタ。
-     *
      * @param cause
      */
     public AzureClientException(Throwable cause) {

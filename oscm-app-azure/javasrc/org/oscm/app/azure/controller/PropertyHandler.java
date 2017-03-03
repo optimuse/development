@@ -216,27 +216,20 @@ public class PropertyHandler {
 
     /**
      * Azure
-     *
-     * @return Azureã�®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
      */
     public String getPassword() {
        return getValidatedProperty(settings.getConfigSettings(), API_USER_PWD);
-    //return API_USER_PWDTest;
     }
 
     /**
-     * ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã�®é…�ç½®URLã‚’å�–å¾—ã€‚
-     *
-     * @return ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã�®é…�ç½®URL
+     * Azure
      */
     public String getTemplateBaseUrl() {
     	return getValidatedProperty(settings.getParameters(), TEMPLATE_BASE_URL);
     }
 
     /**
-     * ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ™‚é–“(ãƒŸãƒªç§’)ã‚’å�–å¾—ã€‚
-     *
-     * @return ã‚¿ã‚¤ãƒ ã‚¢ã‚¦ãƒˆæ™‚é–“(ãƒŸãƒªç§’)
+     * Azure
      */
     public long getReadyTimeout() {
         return Long.parseLong(getValidatedProperty(
@@ -244,9 +237,7 @@ public class PropertyHandler {
     }
 
     /**
-     * æ‰‹å‹•æ“�ä½œãƒ¡ãƒ¼ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å�–å¾—ã€‚
-     *
-     * @return ãƒ¡ãƒ¼ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã€�ã�¾ã�Ÿã�¯æ‰‹å‹•æ“�ä½œã�Œä¸�è¦�ã�ªå ´å�ˆ<code>null</code>
+     * Azure
      */
     public String getMailForCompletion() {
         String value = settings.getParameters().get(MAIL_FOR_COMPLETION);
@@ -254,54 +245,42 @@ public class PropertyHandler {
     }
 
     /**
-     * Azureã�®ã‚µãƒ–ã‚¹ã‚¯ãƒªãƒ—ã‚·ãƒ§ãƒ³IDã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ã‚µãƒ–ã‚¹ã‚¯ãƒªãƒ—ã‚·ãƒ§ãƒ³ID
+     * Azure
      */
     public String getSubscriptionId() {
         return getValidatedProperty(settings.getParameters(), SUBSCRIPTION_ID);
     }
 
     /**
-     * Azureã�®ãƒ†ãƒŠãƒ³ãƒˆIDã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ãƒ†ãƒŠãƒ³ãƒˆID
+     * Azure
      */
     public String getTenantId() {
         return getValidatedProperty(settings.getParameters(), TENANT_ID);
     }
 
     /**
-     * Azureã�®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆIDã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆID
+     * Azure
      */
     public String getClientId() {
        return getValidatedProperty(settings.getParameters(), CLIENT_ID);
     }
 
     /**
-     * Azureã�®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚·ãƒ¼ã‚¯ãƒ¬ãƒƒãƒˆã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‚·ãƒ¼ã‚¯ãƒ¬ãƒƒãƒˆ
+     * Azure
      */
     public String getClientSecret() {
         return settings.getParameters().get(CLIENT_SECRET);
     }
 
     /**
-     * Azureã�®ãƒªãƒ¼ã‚¸ãƒ§ãƒ³ã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ãƒªãƒ¼ã‚¸ãƒ§ãƒ³
+     * Azure
      */
     public String getRegion() {
         return getValidatedProperty(settings.getParameters(), REGION);
     }
 
     /**
-     * Azureã�®ãƒªã‚½ãƒ¼ã‚¹ã‚°ãƒ«ãƒ¼ãƒ—å��ã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ãƒªã‚½ãƒ¼ã‚¹ã‚°ãƒ«ãƒ¼ãƒ—å��
+     * Azure
      */
     public String getResourceGroupName() {
     	
@@ -344,20 +323,15 @@ public class PropertyHandler {
                 INSTANCE_NAME);
 	}
 
-	/**
-     * Azureã�®ãƒªã‚½ãƒ¼ã‚¹ã‚°ãƒ«ãƒ¼ãƒ—å��ã‚’è¨­å®šã�™ã‚‹ã€‚
-     *
-     * @param value
-     *            Azureã�®ãƒªã‚½ãƒ¼ã‚¹ã‚°ãƒ«ãƒ¼ãƒ—å��
+    /**
+     * Azure
      */
     public void setResourceGroupName(String value) {
         settings.getParameters().put(RESOURCE_GROUP_NAME, value);
     }
 
     /**
-     * Azureã�®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å��ã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å��
+     * Azure
      */
     private String getTemplateName() {
         return getValidatedProperty(settings.getParameters(), TEMPLATE_NAME);
@@ -365,9 +339,7 @@ public class PropertyHandler {
     }
 
     /**
-     * Azureã�®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã�®URLã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã�®URL
+     * Azure
      */
     public String getTemplateUrl() {
         try {
@@ -380,9 +352,7 @@ public class PropertyHandler {
     }
 
     /**
-     * Azureã�®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«å��ã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«å��ã€�ã�¾ã�Ÿã�¯<code>null</code>
+     * Azure
      */
     private String getTemplateParametersName() {
         String value = settings.getParameters().get(TEMPLATE_PARAMETERS_NAME);
@@ -390,9 +360,7 @@ public class PropertyHandler {
     }
 
     /**
-     * Azureã�®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ã�®URLã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ã�®URLã€�ã�¾ã�Ÿã�¯<code>null</code>
+     * Azure
      */
     public String getTemplateParametersUrl() {
         String fileName = getTemplateParametersName();
@@ -410,19 +378,14 @@ public class PropertyHandler {
     }
 
     /**
-     * Azureã�®ãƒ‡ãƒ—ãƒ­ã‚¤ãƒ¡ãƒ³ãƒˆå��ã‚’å�–å¾—ã€‚
-     *
-     * @return Azureã�®ãƒ‡ãƒ—ãƒ­ã‚¤ãƒ¡ãƒ³ãƒˆå��
+     * Azure
      */
     public String getDeploymentName() {
        return settings.getParameters().get(DEPLOYMENT_NAME);
     }
 
     /**
-     * Azureã�®ãƒ‡ãƒ—ãƒ­ã‚¤ãƒ¡ãƒ³ãƒˆå��ã‚’è¨­å®šã€‚
-     *
-     * @param value
-     *            Azureã�®ãƒ‡ãƒ—ãƒ­ã‚¤ãƒ¡ãƒ³ãƒˆå��
+     * Azure
      */
     public void setDeploymentName(String value) {
         settings.getParameters().put(DEPLOYMENT_NAME, value);
@@ -430,9 +393,7 @@ public class PropertyHandler {
     }
 
     /**
-     * å‡¦ç�†é€²æ�—ã‚’å�–å¾—ã€‚
-     *
-     * @return å‡¦ç�†é€²æ�—
+     * Azure
      */
     public FlowState getFlowState() {
         String status = settings.getParameters().get(FLOW_STATUS);
@@ -440,29 +401,21 @@ public class PropertyHandler {
     }
 
     /**
-     * å‡¦ç�†é€²æ�—ã‚’è¨­å®šã€‚
-     *
-     * @param value
-     *            å‡¦ç�†é€²æ�—
+     * Azure
      */
     public void setFlowState(FlowState value) {
         settings.getParameters().put(FLOW_STATUS, value.toString());
     }
 
     /**
-     * å‡¦ç�†é–‹å§‹æ™‚é–“(ãƒŸãƒªç§’)ã‚’å�–å¾—ã€‚
-     *
-     * @return å‡¦ç�†é–‹å§‹æ™‚é–“(ãƒŸãƒªç§’)
+     * Azure
      */
     public String getStartTime() {
         return settings.getParameters().get(START_TIME);
     }
 
     /**
-     * å‡¦ç�†é–‹å§‹æ™‚é–“(ãƒŸãƒªç§’)ã‚’è¨­å®šã€‚
-     *
-     * @param value
-     *            å‡¦ç�†é–‹å§‹æ™‚é–“(ãƒŸãƒªç§’)
+     * Azure
      */
     public void setStartTime(String value) {
         settings.getParameters().put(START_TIME, value);
@@ -498,9 +451,7 @@ public class PropertyHandler {
     }
 
     /**
-     * ä½œæˆ�å‡¦ç�†å®Œäº†ãƒ¡ãƒ¼ãƒ«ã�«è¨˜è¼‰ã�™ã‚‹ã€�è¨­å®šæƒ…å ±ã‚’å�–å¾—ã€‚
-     *
-     * @return è¨­å®šæƒ…å ±
+     * Azure
      */
     public String getConfigurationAsString() {
         StringBuffer details = new StringBuffer();

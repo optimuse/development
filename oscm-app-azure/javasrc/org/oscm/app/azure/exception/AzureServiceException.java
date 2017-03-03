@@ -19,18 +19,16 @@ public class AzureServiceException extends AzureClientException {
     private static final long serialVersionUID = -4021541374694794813L;
 
     /**
-     * Azure ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã€‚
+     * Azure
      */
     private String errorCode = "";
 
     /**
-     * Azure ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã€‚
+     * Azure
      */
     private String errorMessage = "";
 
     /**
-     * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚
-     *
      * @param message
      * @param cause
      */
@@ -40,8 +38,6 @@ public class AzureServiceException extends AzureClientException {
     }
 
     /**
-     * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚
-     *
      * @param message
      */
     public AzureServiceException(String message) {
@@ -50,8 +46,6 @@ public class AzureServiceException extends AzureClientException {
     }
 
     /**
-     * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚
-     *
      * @param cause
      */
     public AzureServiceException(Throwable cause) {
@@ -60,10 +54,7 @@ public class AzureServiceException extends AzureClientException {
     }
 
     /**
-     * åˆ�æœŸå‡¦ç�†ã€‚
-     * <p>
-     * cause ã�« <code>ServiceException</code> ã�Œå�«ã�¾ã‚Œã‚‹å ´å�ˆã€�Azure
-     * ã�®ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã�¨ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å�–å¾—ã�™ã‚‹ã€‚
+     * Azure
      */
     private void init() {
         if (getCause() == null) {
@@ -109,36 +100,28 @@ public class AzureServiceException extends AzureClientException {
     }
 
     /**
-     * ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã‚’å�–å¾—ã€‚
-     *
-     * @return ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰
+     * Azure
      */
     public String getErrorCode() {
         return errorCode;
     }
 
     /**
-     * ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰ã‚’è¨­å®šã€‚
-     *
-     * @param ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰
+     * Azure
      */
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
 
     /**
-     * ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å�–å¾—ã€‚
-     *
-     * @return ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+     * Azure
      */
     public String getErrorMessage() {
         return errorMessage;
     }
 
     /**
-     * ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¨­å®šã€‚
-     *
-     * @param ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+     * Azure
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;

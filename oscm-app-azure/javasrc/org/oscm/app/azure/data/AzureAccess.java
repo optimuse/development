@@ -12,30 +12,29 @@ import java.util.List;
 
 public class AzureAccess {
 
-    /**
-     * ä»®æƒ³ãƒžã‚·ãƒ³å��ã€‚
-     */
+	/**
+	 * Azure
+	 */
     private List<String> vmName;
 
-    /**
-     * ãƒ‘ãƒ–ãƒªãƒƒã‚¯IPã‚¢ãƒ‰ãƒ¬ã‚¹ã€
-     */
+	/**
+	 * Azure
+	 */
     private List<String> publicIpAddress;
-    
-    /**
-     * ãƒ‘ãƒ–ãƒªãƒƒã‚¯IPã‚¢ãƒ‰ãƒ¬ã‚¹ã€
-     */
+
+	/**
+	 * Azure
+	 */
     private List<String> privateIpAddress;
-    
-    /**
-     * ãƒ‘ãƒ–ãƒªãƒƒã‚¯IPã‚¢ãƒ‰ãƒ¬ã‚¹ã€
-     */
+
+	/**
+	 * Azure
+	 */
     private List<String> state;
 
-    /**
-     * ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚
-     */
-    
+	/**
+	 * Azure
+	 */
     public AzureAccess() {
 		this.vmName = new ArrayList<>();
 		this.publicIpAddress = new ArrayList<>();
