@@ -128,7 +128,7 @@ public class PropertyHandler {
     /**
      * Azure
      */    
-    public static final String VM_NAME = "VmName";
+    public static final String VM_NAME = "VM_NAME";
     
     /**
      * Azure

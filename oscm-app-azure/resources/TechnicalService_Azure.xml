@@ -74,7 +74,7 @@
       <LocalizedDescription locale="de"/>
       <LocalizedDescription locale="ja"/>
     </ParameterDefinition>
-    <ParameterDefinition configurable="true" id="VmName" mandatory="true" valueType="STRING">
+    <ParameterDefinition configurable="true" id="VM_NAME" mandatory="true" valueType="STRING">
       <LocalizedDescription locale="en">Virtual machine Name</LocalizedDescription>
       <LocalizedDescription locale="de"/>
       <LocalizedDescription locale="ja"/>
