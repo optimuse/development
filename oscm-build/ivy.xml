@@ -489,6 +489,7 @@
     <dependency org="com.microsoft.azure" name="azure-mgmt-storage" rev="0.9.7"/>
     <dependency org="com.microsoft.azure" name="azure-mgmt-compute" rev="0.9.7"/>
     <dependency org="com.microsoft.azure" name="azure-storage" rev="4.4.0"/>
+    <dependency org="com.nimbusds" name="nimbus-jose-jwt" rev="4.33"/>
     <dependency org="org.jboss" name="jandex" rev="2.0.0.Final" transitive="false"/>
 
     <dependency org="org.glassfish.main.web" name="web-core" rev="4.1.1" transitive="false">
