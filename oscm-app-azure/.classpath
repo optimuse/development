@@ -23,6 +23,8 @@
     <classpathentry kind="lib" path="/libraries/nimbus-jose-jwt/javalib/nimbus-jose-jwt-4.33.jar"/>
     <classpathentry kind="lib" path="/libraries/json-smart/javalib/json-smart-2.2.1.jar"/>
     <classpathentry kind="lib" path="/libraries/asm-minidev/javalib/asm-1.0.2.jar"/>
+    <classpathentry kind="lib" path="/libraries/jersey-bundle/javalib/jersey-bundle-1.18.1.jar"/>
+    <classpathentry kind="lib" path="/libraries/apache-lang/javalib/commons-lang-2.6.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/oscm-app-extsvc-1-0"/>
     <classpathentry kind="lib" path="/libraries/glassfish4/javalib/javaee.jar"/>
 	<classpathentry kind="output" path="bin"/>
