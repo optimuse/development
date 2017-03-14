@@ -84,16 +84,6 @@
       <LocalizedDescription locale="de"/>
       <LocalizedDescription locale="ja"/>
     </ParameterDefinition>
-    <ParameterDefinition configurable="true" id="APPROVER_EMAIL" mandatory="true" valueType="STRING">
-      <LocalizedDescription locale="en">Approval e-mail</LocalizedDescription>
-      <LocalizedDescription locale="de"/>
-      <LocalizedDescription locale="ja"/>
-    </ParameterDefinition>
-    <ParameterDefinition configurable="true" default="true" id="RMP_AUTOAPPROVE" mandatory="true" valueType="BOOLEAN">
-      <LocalizedDescription locale="en">Auto-approval</LocalizedDescription>
-      <LocalizedDescription locale="de"/>
-      <LocalizedDescription locale="ja"/>
-    </ParameterDefinition>
     <Operation actionURL="https://<server>:<port>/OperationService/AsynchronousOperationProxy?wsdl" id="START_VIRTUAL_SYSTEM">
       <LocalizedName locale="de">Start</LocalizedName>
       <LocalizedName locale="en">Start</LocalizedName>
