@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <tns:TechnicalServices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="oscm.serviceprovisioning/1.9/TechnicalService.xsd ../../oscm-serviceprovisioning/javares/TechnicalServices.xsd" xmlns:tns="oscm.serviceprovisioning/1.9/TechnicalService.xsd">
-  <tns:TechnicalService accessType="DIRECT" allowingOnBehalfActing="false" baseUrl="" billingIdentifier="NATIVE_BILLING" build="03.03.2016" id="AzureARM" loginPath="/Dynamically provided." onlyOneSubscriptionPerUser="false" provisioningPassword="" provisioningType="ASYNCHRONOUS" provisioningUrl="https://<server>:<port>/ProvisioningService/AsynchronousProvisioningProxy?wsdl" provisioningUsername="" provisioningVersion="1.0">
+  <tns:TechnicalService accessType="DIRECT" allowingOnBehalfActing="false" baseUrl="" billingIdentifier="NATIVE_BILLING" build="03.03.2016" id="AzureARM_Example" loginPath="/Dynamically provided." onlyOneSubscriptionPerUser="false" provisioningPassword="" provisioningType="ASYNCHRONOUS" provisioningUrl="https://<server>:<port>/ProvisioningService/AsynchronousProvisioningProxy?wsdl" provisioningUsername="" provisioningVersion="1.0">
     <AccessInfo locale="en">Description of how to access the application.</AccessInfo>
     <LocalizedDescription locale="en">Azure ARM Implementation</LocalizedDescription>
     <LocalizedLicense locale="en"/>
@@ -54,6 +54,11 @@
       <LocalizedDescription locale="de"/>
       <LocalizedDescription locale="ja"/>
     </ParameterDefinition>
+    <ParameterDefinition configurable="true" id="STORAGE_ACCOUNT" mandatory="true" valueType="STRING">
+      <LocalizedDescription locale="en">Storage Account</LocalizedDescription>
+      <LocalizedDescription locale="de"/>
+      <LocalizedDescription locale="ja"/>
+    </ParameterDefinition>
     <ParameterDefinition configurable="true" id="TEMPLATE_NAME" mandatory="true" valueType="STRING">
       <LocalizedDescription locale="en">Template File Name</LocalizedDescription>
       <LocalizedDescription locale="de"/>
@@ -64,13 +69,28 @@
       <LocalizedDescription locale="de"/>
       <LocalizedDescription locale="ja"/>
     </ParameterDefinition>
-    <ParameterDefinition configurable="true" default="C:\bin\glassfish4\glassfish\domains\integration-bes\docroot\templates" id="TEMPLATE_BASE_URL" mandatory="true" valueType="STRING">
+    <ParameterDefinition configurable="true" default="<file:///path or url>" id="TEMPLATE_BASE_URL" mandatory="true" valueType="STRING">
       <LocalizedDescription locale="en">Template Base URL</LocalizedDescription>
       <LocalizedDescription locale="ja"></LocalizedDescription>
       <LocalizedDescription locale="de"/>
     </ParameterDefinition>
     <ParameterDefinition configurable="true" id="VM_NAME" mandatory="true" valueType="STRING">
       <LocalizedDescription locale="en">Virtual machine Name</LocalizedDescription>
+      <LocalizedDescription locale="de"/>
+      <LocalizedDescription locale="ja"/>
+    </ParameterDefinition>
+    <ParameterDefinition configurable="true" default="1" id="INSTANCE_COUNT" mandatory="true" valueType="STRING">
+      <LocalizedDescription locale="en">Instance count</LocalizedDescription>
+      <LocalizedDescription locale="de"/>
+      <LocalizedDescription locale="ja"/>
+    </ParameterDefinition>
+    <ParameterDefinition configurable="true" id="APPROVER_EMAIL" mandatory="true" valueType="STRING">
+      <LocalizedDescription locale="en">Approval e-mail</LocalizedDescription>
+      <LocalizedDescription locale="de"/>
+      <LocalizedDescription locale="ja"/>
+    </ParameterDefinition>
+    <ParameterDefinition configurable="true" default="true" id="RMP_AUTOAPPROVE" mandatory="true" valueType="BOOLEAN">
+      <LocalizedDescription locale="en">Auto-approval</LocalizedDescription>
       <LocalizedDescription locale="de"/>
       <LocalizedDescription locale="ja"/>
     </ParameterDefinition>
