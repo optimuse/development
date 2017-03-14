@@ -14,7 +14,7 @@
       <LocalizedDescription locale="ja">AzureサブスクリプションID</LocalizedDescription>
       <LocalizedDescription locale="de"/>
     </ParameterDefinition>
-    <ParameterDefinition configurable="false" default="<tenant id> id="TENANT_ID" mandatory="true" valueType="STRING">
+    <ParameterDefinition configurable="false" default="<tenant id>" id="TENANT_ID" mandatory="true" valueType="STRING">
       <LocalizedDescription locale="en">The ID of Azure tenant.</LocalizedDescription>
       <LocalizedDescription locale="ja">AzureテナントID</LocalizedDescription>
       <LocalizedDescription locale="de"/>
