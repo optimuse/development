@@ -9,6 +9,7 @@
 package org.oscm.app.azure.controller;
 
 import java.util.HashMap;
+import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +21,10 @@ import org.oscm.app.v1_0.data.ProvisioningSettings;
 import org.oscm.app.v1_0.exceptions.APPlatformException;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.oscm.app.azure.controller.PropertyHandler.API_USER_NAME;
 import static org.oscm.app.azure.controller.PropertyHandler.CLIENT_ID;
 import static org.oscm.app.azure.controller.PropertyHandler.CLIENT_SECRET;
@@ -30,6 +33,8 @@ import static org.oscm.app.azure.controller.PropertyHandler.RESOURCE_GROUP_NAME;
 import static org.oscm.app.azure.controller.PropertyHandler.TENANT_ID;
 
 public class AzureControllerTest {
+
+    private static final String INSTANCE_ID_1 = "instanceId1";
 
     private AzureController ctrl;
     private ProvisioningSettings provSettingsMock;
@@ -53,9 +58,8 @@ public class AzureControllerTest {
     @Test
     public void deleteInstanceTest() throws APPlatformException {
         // given
-        String instanceId = "instanceId1";
         // when
-        final InstanceStatus instanceStatus = ctrl.deleteInstance(instanceId, provSettingsMock);
+        final InstanceStatus instanceStatus = ctrl.deleteInstance(INSTANCE_ID_1, provSettingsMock);
         // then
         assertTrue(instanceStatus != null);
         assertTrue(instanceStatus.getChangedParameters().get(FLOW_STATUS)
@@ -65,16 +69,9 @@ public class AzureControllerTest {
     @Test
     public void modifyInstanceTest() throws APPlatformException {
         // given
-        ProvisioningSettings provSettingsMock2 = mock(ProvisioningSettings.class);
-        final HashMap<String, String> mock2parameters = fillParameters("2");
-        mock2parameters.put(FLOW_STATUS, FlowState.FINISHED.toString());
-        doReturn(mock2parameters).when(provSettingsMock2).getParameters();
-
-        String instanceId = "instanceId1";
-
-        fillParameters("2");
+        final ProvisioningSettings parametersMockWithFlowState = getParametersMockWithFlowState("2", FlowState.FINISHED);
         // when
-        final InstanceStatus instanceStatus = ctrl.modifyInstance(instanceId, provSettingsMock, provSettingsMock2);
+        final InstanceStatus instanceStatus = ctrl.modifyInstance(INSTANCE_ID_1, provSettingsMock, parametersMockWithFlowState);
         // then
         assertTrue(instanceStatus != null);
         assertTrue(instanceStatus.getChangedParameters().get(FLOW_STATUS)
@@ -84,18 +81,23 @@ public class AzureControllerTest {
     @Test
     public void getInstanceStatusTest() throws APPlatformException {
         // given
-        String instanceId = "instanceId1";
         // when
-        final InstanceStatus instanceStatus = ctrl.getInstanceStatus(instanceId, provSettingsMock);
+        final InstanceStatus instanceStatus = ctrl.getInstanceStatus(INSTANCE_ID_1, provSettingsMock);
         // then
         assertTrue(instanceStatus != null);
+
     }
 
     @Test
-    public void notifyInstanceTest() {
+    public void notifyInstanceTest() throws APPlatformException {
         //given
+        Properties propertiesMock = mock(Properties.class);
+        when(propertiesMock.get(any(String.class))).thenReturn("notfinish");
         //when
+        final InstanceStatus instanceStatus = ctrl.notifyInstance(INSTANCE_ID_1, provSettingsMock, propertiesMock);
         //then
+        assertTrue(instanceStatus == null);
+
     }
 
     @Test
@@ -171,5 +173,14 @@ public class AzureControllerTest {
         parameters.put(CLIENT_SECRET, "secret1" + modifier);
 
         return parameters;
+    }
+
+    private ProvisioningSettings getParametersMockWithFlowState(String modifier, FlowState flowState) {
+        ProvisioningSettings provSettingsMock = mock(ProvisioningSettings.class);
+        final HashMap<String, String> mockParameters = fillParameters(modifier);
+        mockParameters.put(FLOW_STATUS, flowState.toString());
+        doReturn(mockParameters).when(provSettingsMock).getParameters();
+        return provSettingsMock;
+
     }
 }

@@ -281,7 +281,9 @@ public class AzureController implements APPlatformController {
                 throw pe;
             }
         }
-        status.setChangedParameters(settings.getParameters());
+        if (status != null) {
+            status.setChangedParameters(settings.getParameters());
+        }
         return status;
     }
 
@@ -483,7 +485,7 @@ public class AzureController implements APPlatformController {
     /**
      * Returns a small status text for the current provisioning step.
      *
-     * @param paramHandler
+     * @param ph
      *            property handler containing the current status
      * @return short status text describing the current status
      */
