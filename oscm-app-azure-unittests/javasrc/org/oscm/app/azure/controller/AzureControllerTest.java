@@ -81,6 +81,86 @@ public class AzureControllerTest {
                 .equals(FlowState.MODIFICATION_REQUESTED.toString()));
     }
 
+    @Test
+    public void getInstanceStatusTest() throws APPlatformException {
+        // given
+        String instanceId = "instanceId1";
+        // when
+        final InstanceStatus instanceStatus = ctrl.getInstanceStatus(instanceId, provSettingsMock);
+        // then
+        assertTrue(instanceStatus != null);
+    }
+
+    @Test
+    public void notifyInstanceTest() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void activateInstanceTest() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void deactivateInstanceTest() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void executeServiceOperation() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void createUsers() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void deleteUsers() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void updateUsers() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void getControllerStatus() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void getOperationParameters() {
+        //given
+        //when
+        //then
+    }
+
+    @Test
+    public void setControllerSettings() {
+        //given
+        //when
+        //then
+    }
+
     private HashMap<String, String> fillParameters(String modifier) {
         HashMap<String, String> parameters = new HashMap<>();
 
