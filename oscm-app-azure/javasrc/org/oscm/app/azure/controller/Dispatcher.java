@@ -60,6 +60,8 @@ public class Dispatcher {
      * Reference to an APPlatformService instance.
      */
     private  APPlatformService platformService=null;
+    private AzureCommunication azureCom;
+
     FlowState flowState;
 
     /**
@@ -320,8 +322,7 @@ public class Dispatcher {
     private FlowState dispatchOperationProcess(final FlowState flowState,
             InstanceStatus status) {
         logger.debug("Dispatcher.dispatchOperationProcess entered");
-
-        AzureCommunication azureCom = new AzureCommunication(ph);
+        azureCom = getAzureCommunication();
         AzureState azureState;
         FlowState nextFlowState = null;
         switch (flowState) {
@@ -369,6 +370,10 @@ public class Dispatcher {
         default:
         }
         return nextFlowState;
+    }
+
+    public AzureCommunication getAzureCommunication() {
+            return new AzureCommunication(ph);
     }
 
     /**
