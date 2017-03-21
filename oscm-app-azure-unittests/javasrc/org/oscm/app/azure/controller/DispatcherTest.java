@@ -5,6 +5,8 @@
  *******************************************************************************/
 package org.oscm.app.azure.controller;
 
+import java.util.HashMap;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,23 +38,18 @@ public class DispatcherTest {
 
     private Dispatcher dispatcher;
     private APPlatformService mockPlatformService;
-    private PropertyHandler mockPropertyHandler;
+    private PropertyHandler ph;
     private AzureCommunication mockAzureComm;
+    private ProvisioningSettings settings;
 
     @Before
     public void setUp() {
         mockAzureComm = mock(AzureCommunication.class);
         mockPlatformService = mock(APPlatformService.class);
-        mockPropertyHandler = mock(PropertyHandler.class);
-        when(mockPropertyHandler.getClientId()).thenReturn(CLENT_ID);
-        when(mockPropertyHandler.getTenantId()).thenReturn(TENANT_ID);
-        when(mockPropertyHandler.getUserName()).thenReturn(USERNAME);
-        when(mockPropertyHandler.getPassword()).thenReturn(PASSWORD);
-        when(mockPropertyHandler.getCustomerLocale()).thenReturn("en");
-        ProvisioningSettings mockSettings = mock(ProvisioningSettings.class);
-        when(mockPropertyHandler.getSettings()).thenReturn(mockSettings);
-
-        dispatcher = new Dispatcher(mockPlatformService, INSTANCE_ID, mockPropertyHandler) {
+        HashMap<String, String> configSettings = null;
+        settings = new ProvisioningSettings(createParameters(), configSettings, "en");
+        ph = new PropertyHandler(settings);
+        dispatcher = new Dispatcher(mockPlatformService, INSTANCE_ID, ph) {
             @Override
             public AzureCommunication getAzureCommunication() {
                 return mockAzureComm;
@@ -61,10 +58,11 @@ public class DispatcherTest {
 
     }
 
+
     @Test
     public void dispatchTest_provisioning() {
         // given
-        when(mockPropertyHandler.getFlowState()).thenReturn(FlowState.CREATING);
+
         // when
         final InstanceStatus instanceStatus;
         try {
@@ -79,20 +77,22 @@ public class DispatcherTest {
     @Test
     public void dispatchTest_operation_startRequested() throws APPlatformException {
         // given
-        mockPropertyHandler = spy(mockPropertyHandler);
+        settings.getParameters().put(PropertyHandler.FLOW_STATUS, "STARTING");
+
         AccessInfo output = mock(AccessInfo.class);
         when(mockAzureComm.getAccessInfo("STARTING")).thenReturn(output);
-        when(mockPropertyHandler.getFlowState()).thenReturn(FlowState.START_REQUESTED);
+
         // when
         final InstanceStatus dispatch = dispatcher.dispatch();
+
         // then
-        assertTrue(mockPropertyHandler.getFlowState().equals(FlowState.STARTING.toString()));
+        assertTrue(ph.getFlowState().equals(FlowState.STARTING.toString()));
     }
 
     @Test
     public void dispatchTest_operation_starting() {
         // given
-        when(mockPropertyHandler.getFlowState()).thenReturn(FlowState.STARTING);
+        when(ph.getFlowState()).thenReturn(FlowState.STARTING);
         // when
         final InstanceStatus instanceStatus;
         try {
@@ -107,7 +107,7 @@ public class DispatcherTest {
     @Test
     public void dispatchTest_operation_stopRequested() {
         // given
-        when(mockPropertyHandler.getFlowState()).thenReturn(FlowState.STOP_REQUESTED);
+        when(ph.getFlowState()).thenReturn(FlowState.STOP_REQUESTED);
         // when
         final InstanceStatus instanceStatus;
         try {
@@ -122,7 +122,7 @@ public class DispatcherTest {
     @Test
     public void dispatchTest_operation_stopping() {
         // given
-        when(mockPropertyHandler.getFlowState()).thenReturn(FlowState.STOPPING);
+        when(ph.getFlowState()).thenReturn(FlowState.STOPPING);
         // when
         final InstanceStatus instanceStatus;
         try {
@@ -137,7 +137,7 @@ public class DispatcherTest {
     @Test
     public void dispatchTest_activation() {
         // given
-        when(mockPropertyHandler.getFlowState()).thenReturn(FlowState.CREATING);
+        when(ph.getFlowState()).thenReturn(FlowState.CREATING);
         // when
         final InstanceStatus instanceStatus;
         try {
@@ -147,5 +147,14 @@ public class DispatcherTest {
             // assert the request is sent to Azure (fails because of invalid credentials)
             assertTrue(e instanceof SuspendException);
         }
+    }
+
+    private HashMap<String, String> createParameters() {
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put(PropertyHandler.CLIENT_ID, CLENT_ID);
+        parameters.put(PropertyHandler.TENANT_ID, TENANT_ID);
+        parameters.put(PropertyHandler.API_USER_NAME, USERNAME);
+        parameters.put(PropertyHandler.API_USER_PWD, PASSWORD);
+        return parameters;
     }
 }
