@@ -211,7 +211,7 @@ public class Dispatcher {
         logger.debug("Dispatcher.dispatchProvisioningProcess entered");
         
         String mail = ph.getMailForCompletion();
-        AzureCommunication azureCom = new AzureCommunication(ph);
+        AzureCommunication azureCom = getAzureCommunication();
         AzureState azureState;
         FlowState nextFlowState = null;
         switch (flowState) {

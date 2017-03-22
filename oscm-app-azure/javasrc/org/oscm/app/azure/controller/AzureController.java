@@ -17,6 +17,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import org.oscm.app.azure.AzureCommunication;
 import org.oscm.app.azure.data.FlowState;
 import org.oscm.app.azure.i18n.Messages;
 
@@ -107,15 +108,16 @@ public class AzureController implements APPlatformController {
      */
     @Override
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public InstanceDescription createInstance(ProvisioningSettings settings) throws APPlatformException 
+    public InstanceDescription createInstance(ProvisioningSettings settings) throws APPlatformException
     {
-        try 
+        try
         {
         	logger.info("Inside createInstance");
             String instanceId = INSTANCE_ID_PREFIX
                     + UUID.randomUUID().toString();
             PropertyHandler ph = new PropertyHandler(settings);
-            ProvisioningValidator.validateParameters(ph);
+            AzureCommunication azureComm = getAzureCommunication(ph);
+            ProvisioningValidator.validateParameters(ph, azureComm);
             ph.setFlowState(FlowState.CREATION_REQUESTED);
             // Return generated instance information
             InstanceDescription id = new InstanceDescription();
@@ -123,11 +125,15 @@ public class AzureController implements APPlatformController {
             id.setChangedParameters(settings.getParameters());
             logger.info("exiting createInstance with id: "+id.getInstanceId());
             return id;
-        } 
-        catch (Exception t) 
+        }
+        catch (Exception t)
         {
             throw t;
         }
+    }
+
+    public AzureCommunication getAzureCommunication(PropertyHandler ph) {
+        return new AzureCommunication(ph);
     }
 
     /**

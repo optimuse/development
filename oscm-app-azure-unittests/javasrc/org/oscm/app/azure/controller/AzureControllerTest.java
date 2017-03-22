@@ -8,6 +8,7 @@
 
 package org.oscm.app.azure.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -15,8 +16,10 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.oscm.app.azure.AzureCommunication;
 import org.oscm.app.azure.data.FlowState;
 import org.oscm.app.azure.exception.AzureClientException;
+import org.oscm.app.v1_0.data.InstanceDescription;
 import org.oscm.app.v1_0.data.InstanceStatus;
 import org.oscm.app.v1_0.data.InstanceStatusUsers;
 import org.oscm.app.v1_0.data.LocalizedText;
@@ -34,6 +37,7 @@ import static org.oscm.app.azure.controller.PropertyHandler.API_USER_NAME;
 import static org.oscm.app.azure.controller.PropertyHandler.CLIENT_ID;
 import static org.oscm.app.azure.controller.PropertyHandler.CLIENT_SECRET;
 import static org.oscm.app.azure.controller.PropertyHandler.FLOW_STATUS;
+import static org.oscm.app.azure.controller.PropertyHandler.REGION;
 import static org.oscm.app.azure.controller.PropertyHandler.RESOURCE_GROUP_NAME;
 import static org.oscm.app.azure.controller.PropertyHandler.TENANT_ID;
 
@@ -48,21 +52,36 @@ public class AzureControllerTest {
 
     private AzureController ctrl;
     private ProvisioningSettings provSettingsMock;
+    private AzureCommunication azureCommMock;
     @Before
     public void setup() {
-        ctrl = new AzureController();
+        azureCommMock = mock(AzureCommunication.class);
+        ctrl = new AzureController(){
+            @Override
+            public AzureCommunication getAzureCommunication(PropertyHandler ph) {
+                return azureCommMock;
+            }
+        };
         provSettingsMock = mock(ProvisioningSettings.class);
         final HashMap<String, String> parameters = fillParameters("1");
         doReturn(parameters).when(provSettingsMock).getParameters();
+
+        ArrayList regionsList = new ArrayList();
+        regionsList.add("region1");
+        regionsList.add("region2");
+
+        when(azureCommMock.getAvailableRegions()).thenReturn(regionsList);
     }
 
-    @Test(expected = AzureClientException.class)
+    @Test
     public void createInstanceTest() throws APPlatformException {
         // given
         // when
-        ctrl.createInstance(provSettingsMock);
+        final InstanceDescription instance = ctrl.createInstance(provSettingsMock);
         // then
-        // expect exception because of invalid authentication token
+        assertTrue(instance != null);
+        assertTrue(instance.getInstanceId().length() > 0);
+        assertTrue(instance.getInstanceId().startsWith("azure"));
     }
 
     @Test
@@ -318,6 +337,7 @@ public class AzureControllerTest {
         parameters.put(CLIENT_ID, "client1" + modifier);
         parameters.put(API_USER_NAME, "client1" + modifier);
         parameters.put(CLIENT_SECRET, "secret1" + modifier);
+        parameters.put(REGION, "region" + modifier);
 
         return parameters;
     }

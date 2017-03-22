@@ -12,16 +12,15 @@ import org.junit.Test;
 
 import org.oscm.app.azure.AzureCommunication;
 import org.oscm.app.azure.data.AccessInfo;
+import org.oscm.app.azure.data.AzureState;
 import org.oscm.app.azure.data.FlowState;
 import org.oscm.app.v1_0.data.InstanceStatus;
 import org.oscm.app.v1_0.data.ProvisioningSettings;
 import org.oscm.app.v1_0.exceptions.APPlatformException;
-import org.oscm.app.v1_0.exceptions.SuspendException;
 import org.oscm.app.v1_0.intf.APPlatformService;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 
@@ -58,95 +57,112 @@ public class DispatcherTest {
 
     }
 
-
     @Test
-    public void dispatchTest_provisioning() {
+    public void dispatchTest_provisioning() throws APPlatformException {
         // given
+        settings.getParameters().put(PropertyHandler.FLOW_STATUS, FlowState.CREATION_REQUESTED.toString());
+
+        AccessInfo output = mock(AccessInfo.class);
+        when(mockAzureComm.getAccessInfo(FlowState.STARTING.toString())).thenReturn(output);
 
         // when
-        final InstanceStatus instanceStatus;
-        try {
-            instanceStatus = dispatcher.dispatch();
-        } catch (APPlatformException e) {
-            // then
-            // assert the request is sent to Azure (fails because of invalid credentials)
-            assertTrue(e instanceof SuspendException);
-        }
+        final InstanceStatus instanceStatus = dispatcher.dispatch();
+
+        // then
+        assertTrue(ph.getFlowState().toString().equals(FlowState.CREATING.toString()));
+        assertTrue(instanceStatus.getChangedParameters().get(PropertyHandler.FLOW_STATUS)
+                .equals(FlowState.CREATING.toString()));
     }
 
     @Test
     public void dispatchTest_operation_startRequested() throws APPlatformException {
         // given
-        settings.getParameters().put(PropertyHandler.FLOW_STATUS, "STARTING");
+        settings.getParameters().put(PropertyHandler.FLOW_STATUS, FlowState.START_REQUESTED.toString());
 
         AccessInfo output = mock(AccessInfo.class);
-        when(mockAzureComm.getAccessInfo("STARTING")).thenReturn(output);
+        when(mockAzureComm.getAccessInfo(FlowState.STARTING.toString())).thenReturn(output);
 
         // when
-        final InstanceStatus dispatch = dispatcher.dispatch();
+        final InstanceStatus instanceStatus = dispatcher.dispatch();
 
         // then
-        assertTrue(ph.getFlowState().equals(FlowState.STARTING.toString()));
+        assertTrue(ph.getFlowState().toString().equals(FlowState.STARTING.toString()));
+        assertTrue(instanceStatus.getChangedParameters().get(PropertyHandler.FLOW_STATUS)
+                .equals(FlowState.STARTING.toString()));
     }
 
     @Test
-    public void dispatchTest_operation_starting() {
+    public void dispatchTest_operation_starting() throws APPlatformException {
         // given
-        when(ph.getFlowState()).thenReturn(FlowState.STARTING);
+        settings.getParameters().put(PropertyHandler.FLOW_STATUS, FlowState.STARTING.toString());
+
+        AccessInfo output = mock(AccessInfo.class);
+        when(mockAzureComm.getAccessInfo("RUNNING")).thenReturn(output);
+        AzureState mockState = mock(AzureState.class);
+        when(mockState.isSucceeded()).thenReturn(true);
+        when(mockAzureComm.getStartingState()).thenReturn(mockState);
+
         // when
-        final InstanceStatus instanceStatus;
-        try {
-            instanceStatus = dispatcher.dispatch();
-        } catch (APPlatformException e) {
-            // then
-            // assert the request is sent to Azure (fails because of invalid credentials)
-            assertTrue(e instanceof SuspendException);
-        }
+        final InstanceStatus instanceStatus = dispatcher.dispatch();
+
+        // then
+        assertTrue(ph.getFlowState().toString().equals(FlowState.FINISHED.toString()));
+        assertTrue(instanceStatus.getChangedParameters().get(PropertyHandler.FLOW_STATUS)
+                .equals(FlowState.FINISHED.toString()));
     }
 
     @Test
-    public void dispatchTest_operation_stopRequested() {
+    public void dispatchTest_operation_stopRequested() throws APPlatformException {
         // given
-        when(ph.getFlowState()).thenReturn(FlowState.STOP_REQUESTED);
+        settings.getParameters().put(PropertyHandler.FLOW_STATUS, FlowState.STOP_REQUESTED.toString());
+
+        AccessInfo output = mock(AccessInfo.class);
+        when(mockAzureComm.getAccessInfo(FlowState.STOPPING.toString())).thenReturn(output);
+
         // when
-        final InstanceStatus instanceStatus;
-        try {
-            instanceStatus = dispatcher.dispatch();
-        } catch (APPlatformException e) {
-            // then
-            // assert the request is sent to Azure (fails because of invalid credentials)
-            assertTrue(e instanceof SuspendException);
-        }
+        final InstanceStatus instanceStatus = dispatcher.dispatch();
+
+        // then
+        assertTrue(ph.getFlowState().toString().equals(FlowState.STOPPING.toString()));
+        assertTrue(instanceStatus.getChangedParameters().get(PropertyHandler.FLOW_STATUS)
+                .equals(FlowState.STOPPING.toString()));
     }
 
     @Test
-    public void dispatchTest_operation_stopping() {
+    public void dispatchTest_operation_stopping() throws APPlatformException {
         // given
-        when(ph.getFlowState()).thenReturn(FlowState.STOPPING);
+        settings.getParameters().put(PropertyHandler.FLOW_STATUS, FlowState.STOPPING.toString());
+
+        AccessInfo output = mock(AccessInfo.class);
+        when(mockAzureComm.getAccessInfo("STOPPED")).thenReturn(output);
+        AzureState mockState = mock(AzureState.class);
+        when(mockState.isSucceeded()).thenReturn(true);
+        when(mockAzureComm.getStoppingState()).thenReturn(mockState);
+
         // when
-        final InstanceStatus instanceStatus;
-        try {
-            instanceStatus = dispatcher.dispatch();
-        } catch (APPlatformException e) {
-            // then
-            // assert the request is sent to Azure (fails because of invalid credentials)
-            assertTrue(e instanceof SuspendException);
-        }
+        final InstanceStatus instanceStatus = dispatcher.dispatch();
+
+        // then
+        assertTrue(ph.getFlowState().toString().equals(FlowState.FINISHED.toString()));
+        assertTrue(instanceStatus.getChangedParameters().get(PropertyHandler.FLOW_STATUS)
+                .equals(FlowState.FINISHED.toString()));
     }
 
     @Test
-    public void dispatchTest_activation() {
+    public void dispatchTest_activation() throws APPlatformException {
         // given
-        when(ph.getFlowState()).thenReturn(FlowState.CREATING);
+        settings.getParameters().put(PropertyHandler.FLOW_STATUS, FlowState.ACTIVATION_REQUESTED.toString());
+
+        AccessInfo output = mock(AccessInfo.class);
+        when(mockAzureComm.getAccessInfo(FlowState.STARTING.toString())).thenReturn(output);
+
         // when
-        final InstanceStatus instanceStatus;
-        try {
-            instanceStatus = dispatcher.dispatch();
-        } catch (APPlatformException e) {
-            // then
-            // assert the request is sent to Azure (fails because of invalid credentials)
-            assertTrue(e instanceof SuspendException);
-        }
+        final InstanceStatus instanceStatus = dispatcher.dispatch();
+
+        // then
+        assertTrue(ph.getFlowState().toString().equals(FlowState.STARTING.toString()));
+        assertTrue(instanceStatus.getChangedParameters().get(PropertyHandler.FLOW_STATUS)
+                .equals(FlowState.STARTING.toString()));
     }
 
     private HashMap<String, String> createParameters() {

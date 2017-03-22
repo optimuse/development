@@ -18,9 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.oscm.app.azure.AzureCommunication;
 import org.oscm.app.azure.i18n.Messages;
 import org.oscm.app.v1_0.exceptions.APPlatformException;
-import org.oscm.app.v1_0.exceptions.AuthenticationException;
-import org.oscm.app.v1_0.exceptions.ConfigurationException;
-import org.oscm.app.v1_0.exceptions.SuspendException;
 
 public class ProvisioningValidator {
 
@@ -35,7 +32,7 @@ public class ProvisioningValidator {
      *           and controller configuration settings
      * @throws APPlatformException
      */
-    public static void validateParameters(PropertyHandler ph)
+    public static void validateParameters(PropertyHandler ph, AzureCommunication azureComm)
             throws APPlatformException {
         String resourceGroupName = ph.getResourceGroupName();
         if (StringUtils.isBlank(resourceGroupName)) {
@@ -51,9 +48,8 @@ public class ProvisioningValidator {
                     new Object[]{resourceGroupName}));
         }
 
-        AzureCommunication azureCom = new AzureCommunication(ph);
         String region = ph.getRegion();
-        List<String> regions = azureCom.getAvailableRegions();
+        List<String> regions = azureComm.getAvailableRegions();
         if (regions.indexOf(region) < 0) {
             logger.error("Validation error on region: [" + region + "/"
                     + StringUtils.join(regions, ", ") + "]");
