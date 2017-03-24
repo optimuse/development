@@ -44,6 +44,15 @@ public class AccessInfoTest {
     }
 
     @Test
+    public void getOutputTest_unsupportedLocale() {
+        // given
+        // when
+        final String output = accessInfo.getOutput("pl");
+        // then
+        assertTrue(Messages.get("pl", "accessInfo_NOT_AVAILABLE").equals(output));
+    }
+
+    @Test
     public void getOutputTest_bothIPsSet() {
         // given
         setMockIPs(true, true);

@@ -125,10 +125,10 @@ public class AzureCommunication {
 	private static boolean exisitingStorageAccount=false;
 
 	/***
-	 * 
+	 *
 	 *
 	 * Connection With Azure and initializing the clients
-	 *         
+	 *
 	 */
 	public AzureCommunication(PropertyHandler ph) {
 		// Proxy Authenticator
@@ -154,11 +154,11 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 *
 	 * Creating the configuration for connection
-	 *           
-	 * 
+	 *
+	 *
 	 */
 	private Configuration createConfiguration() {
 		AuthenticationResult result;
@@ -196,12 +196,12 @@ public class AzureCommunication {
 	}
 
 	/**
-	 * 
-	 * Retrieving the access token using user credentials  
-	 *  
+	 *
+	 * Retrieving the access token using user credentials
+	 *
 	 *
 	 */
-	private static AuthenticationResult getAccessTokenFromUserCredentials(
+	private AuthenticationResult getAccessTokenFromUserCredentials(
 			String tenantId, String clientId, String apiUserName,
 			String apiPassword) throws MalformedURLException,
 	InterruptedException, ExecutionException,
@@ -212,8 +212,7 @@ public class AzureCommunication {
 			AuthenticationContext context = new AuthenticationContext(
 					AUTHORITY_BASE_URL + tenantId, false, service);
 			context.setProxy(ProxySettings.getProxy(AUTHORITY_BASE_URL));
-			result = context.acquireToken(RESOURCE_BASE_URL, clientId,
-					apiUserName, apiPassword, null).get();
+            result = acquireToken(context, clientId, apiUserName, apiPassword);
 		} finally {
 			service.shutdown();
 		}
@@ -225,15 +224,16 @@ public class AzureCommunication {
 		return result;
 	}
 
+
 	/**
 	 *
 	 *
-	 *Retrieving the access token using client credentials 
+	 *Retrieving the access token using client credentials
 	 *
 	 *
 	 */
-	private static AuthenticationResult getAccessTokenFromClientCredentials(
-			String tenantId, String clientId, 
+	private AuthenticationResult getAccessTokenFromClientCredentials(
+			String tenantId, String clientId,
 			String clientSecret) throws MalformedURLException,
 	InterruptedException, ExecutionException,
 	ServiceUnavailableException {
@@ -243,10 +243,10 @@ public class AzureCommunication {
 			AuthenticationContext context = new AuthenticationContext(AUTHORITY_BASE_URL + tenantId, false, service);
 			context.setProxy(ProxySettings.getProxy(AUTHORITY_BASE_URL));
 			ClientCredential clientCredential = new ClientCredential(clientId, clientSecret);
-			result = context.acquireToken(RESOURCE_BASE_URL, clientCredential, null).get();
+			result = acquireToken(context, clientCredential);
 		}catch (Exception e) {
 			logger.error("Exception while authentication: "+e);
-		} 
+		}
 
 		finally {
 			service.shutdown();
@@ -259,20 +259,22 @@ public class AzureCommunication {
 		return result;
 	}
 
+
 	/**
-	 * 
+	 *
 	 *	Accessing the Template
 	 *
 	 *
 	 */
-	private static String getTemplate(String url, String operation)     throws AbortException {
+	private String getTemplate(String url, String operation)     throws AbortException {
 		logger.debug("Template URL: " + url);
 		try {
 
 			URL source = new URL(url);
-			BOMInputStream in = new BOMInputStream(source.openConnection(ProxySettings.getProxy(url)).getInputStream());
-			try {
-				return IOUtils.toString(in);
+			BOMInputStream in;
+            in = getBOMInputStream(source, url);
+            try {
+				return getBOMtoString(in);
 			} finally {
 				IOUtils.closeQuietly(in);
 			}
@@ -285,12 +287,20 @@ public class AzureCommunication {
 		}
 	}
 
+	protected String getBOMtoString(BOMInputStream in) throws IOException {
+		return IOUtils.toString(in);
+	}
+
+    protected BOMInputStream getBOMInputStream(URL source, String url) throws IOException {
+        return new BOMInputStream(source.openConnection(ProxySettings.getProxy(url)).getInputStream());
+    }
+
 	/**
-	 * 
-	 * Updating the template parameters 
+	 *
+	 * Updating the template parameters
 	 *
 	 */
-	private  String getTemplateParameters(String url, String operation)
+	private String getTemplateParameters(String url, String operation)
 			throws AbortException {
 		String parameters = getTemplate(url, operation);
 		int numberOfInstances=Integer.parseInt(ph.getInstanceCount());
@@ -345,11 +355,11 @@ public class AzureCommunication {
 	}
 
 	/**
-	 * 
+	 *
 	 * Accessing the virtual machine ID
 	 *
 	 */
-	private String getVirtualMachineImageID() 
+	private String getVirtualMachineImageID()
 	{
 
 		switch (ph.getVirtualMachineImageID())
@@ -367,14 +377,14 @@ public class AzureCommunication {
 			return "MicrosoftWindowsServer WindowsServer 2012-R2-Datacenter";
 		}
 	}
-	
+
 	/**
-	 * 
-	 * Creating custom Azure exceptions 
-	 * 
-	 * 
+	 *
+	 * Creating custom Azure exceptions
+	 *
+	 *
 	 */
-	private static AzureClientException createAndLogAzureException(
+	private AzureClientException createAndLogAzureException(
 			String message, Throwable t) {
 		logger.debug("createAndLogAzureException Name: {}, Message: {}", t
 				.getClass().getName(), t.getMessage());
@@ -391,7 +401,7 @@ public class AzureCommunication {
 	}
 
 	/**
-	 * 
+	 *
 	 * Creating the instance (Azure VMs)
 	 *
 	 */
@@ -400,7 +410,7 @@ public class AzureCommunication {
 		logger.debug("ResourceGroupName: {}, Region: {}",
 				ph.getResourceGroupName(), ph.getRegion());
 		try {
-			resourceClient.getResourceGroupsOperations().createOrUpdate(ph.getResourceGroupName(),new ResourceGroupExtended(ph.getRegion()));
+		    createOrUpdate();
 		} catch (IOException | URISyntaxException | ServiceException e) {
 			throw createAndLogAzureException("Create a resource group failed: "
 					+ e.getMessage(), e);
@@ -414,10 +424,14 @@ public class AzureCommunication {
 		}
 	}
 
+    protected void createOrUpdate() throws ServiceException, IOException, URISyntaxException {
+        resourceClient.getResourceGroupsOperations().createOrUpdate(ph.getResourceGroupName(),new ResourceGroupExtended(ph.getRegion()));
+    }
+
 	/***
-	 * 
+	 *
 	 * Updating the instance (new deployment)
-	 * 
+	 *
 	 */
 	public void updateInstance() throws AbortException {
 		logger.debug("AzureCommunication.updateInstance entered");
@@ -426,11 +440,11 @@ public class AzureCommunication {
 	}
 
 	/**
-	 * 
+	 *
 	 * Deleting the instance (Azure VMs and resources)
-	 * 
+	 *
 	 */
-	public void deleteInstance() 
+	public void deleteInstance()
 	{
 		logger.debug("AzureCommunication.deleteInstance entered");
 		ArrayList<VirtualMachine> virtualMachines=getVirtualMachines();
@@ -445,11 +459,11 @@ public class AzureCommunication {
 				VirtualMachine machine= iterator.next();
 
 				computeClient.getVirtualMachinesOperations().beginDeleting(ph.getResourceGroupName(),machine.getName());
-				
+
 				logger.info("Deleting VM-"+machine.getName()+"...");
-				
+
 				List<NetworkInterfaceReference> nics = machine.getNetworkProfile().getNetworkInterfaces();
-				for (NetworkInterfaceReference nicReference : nics) 
+				for (NetworkInterfaceReference nicReference : nics)
 				{
 					String[] nicURI = nicReference.getReferenceUri().split("/");
 					NetworkInterface nic = networkClient.getNetworkInterfacesOperations()
@@ -498,7 +512,7 @@ public class AzureCommunication {
 					logger.debug("Invalid Key !!");
 					e.printStackTrace();
 				}
-				
+
 				CloudBlobClient client = account.createCloudBlobClient();
 
 				Iterator<CloudBlobContainer> containerIterator=client.listContainers().iterator();
@@ -519,7 +533,7 @@ public class AzureCommunication {
 				}
 			}
 			else
-			{		
+			{
 				//Deleting VM Container
 				deleteVMContainer();
 			}
@@ -542,7 +556,7 @@ public class AzureCommunication {
 			{
 				exist=resourceClient.getDeploymentsOperations().checkExistence(ph.getResourceGroupName(), ph.getDeploymentName()).isExists();
 			}
-			logger.info("Deployment deleted !!");			
+			logger.info("Deployment deleted !!");
 		}
 		catch (IOException | ServiceException | URISyntaxException | ExecutionException | InterruptedException e) {
 			throw createAndLogAzureException("Delete Resources failed: ", e);
@@ -550,11 +564,11 @@ public class AzureCommunication {
 		}
 
 	}
-	
+
 	/***
-	 * 
+	 *
 	 * Deleting VM Container
-	 * 
+	 *
 	 */
 	public void deleteVMContainer() throws IOException, ServiceException, URISyntaxException
 	{
@@ -577,14 +591,14 @@ public class AzureCommunication {
 		while (containerIterator.hasNext())
 		{
 			CloudBlobContainer cloudBlobContainer = (CloudBlobContainer) containerIterator.next();
-			try 
+			try
 			{
 				if(cloudBlobContainer.getName().contains(ph.getVMName().toLowerCase()))
 				{
 					isDelete=cloudBlobContainer.deleteIfExists();
 				}
 			}
-			catch (StorageException e) 
+			catch (StorageException e)
 			{
 				logger.debug("Storage Exception while Deleting container !!");
 				e.printStackTrace();
@@ -601,9 +615,9 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 * Starting the Azure instances (Azure VMs)
-	 * 
+	 *
 	 */
 	public void startInstance() {
 		logger.debug("AzureCommunication.startInstance entered");
@@ -621,9 +635,9 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 * Stopping the Azure instances (Azure VMs)
-	 * 
+	 *
 	 */
 	public void stopInstance() {
 		logger.debug("AzureCommunication.stopInstance entered");
@@ -641,9 +655,9 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 * Retrieving the Azure state (synchronously)
-	 * 
+	 *
 	 */
 	public AzureState getDeploymentState() {
 		logger.debug("AzureCommunication.getDeploymentState entered: "+ph.getDeploymentName());
@@ -691,9 +705,9 @@ public class AzureCommunication {
 	/***
 	 *
 	 * Retrieving the deleting state of Azure VMs
-	 * 
+	 *
 	 */
-	public AzureState getDeletingState() 
+	public AzureState getDeletingState()
 	{
 		logger.debug("AzureCommunication.getDeletingState() entered");
 
@@ -705,9 +719,9 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 * Retrieving the starting state of Azure VM
-	 * 
+	 *
 	 */
 	public AzureState getStartingState() {
 		logger.debug("AzureCommunication.getStartingState() entered");
@@ -728,9 +742,9 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 * Retrieving the stopping state of Azure VMs
-	 * 
+	 *
 	 */
 	public AzureState getStoppingState() {
 		logger.debug("AzureCommunication.getStoppingState() entered");
@@ -814,7 +828,7 @@ public class AzureCommunication {
 								logger.info("Public IP address not assigned ");
 							}
 							if(ipConfiguration.getPrivateIpAddress()!=null)
-							{	
+							{
 								logger.debug("Private IP address: "+ ipConfiguration.getPrivateIpAddress());
 								accessPrivateIPs.add(ipConfiguration.getPrivateIpAddress());
 							}
@@ -842,7 +856,7 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 * Retrieving all the available regions
 	 *
 	 */
@@ -868,9 +882,9 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 * Deploying the Azure templates
-	 * 
+	 *
 	 */
 	private void deploymentTemplate(String operation) throws AbortException {
 		// set deployment name
@@ -898,7 +912,7 @@ public class AzureCommunication {
 		Deployment deployment = new Deployment();
 		deployment.setProperties(deploymentProperties);
 		try {
-			resourceClient.getDeploymentsOperations().createOrUpdate(ph.getResourceGroupName(),ph.getDeploymentName(), deployment).getDeployment();
+			getResourceClient().getDeploymentsOperations().createOrUpdate(ph.getResourceGroupName(),ph.getDeploymentName(), deployment).getDeployment();
 		} catch (IOException | URISyntaxException | ServiceException e) {
 			throw createAndLogAzureException(
 					"Deployment template failed: " + e.getMessage(), e);
@@ -908,7 +922,7 @@ public class AzureCommunication {
 	/***
 	 *
 	 * Checking whether the Resource Group exists or not
-	 * 
+	 *
 	 */
 	private boolean isExistsResourceGroup() {
 		try {
@@ -921,9 +935,9 @@ public class AzureCommunication {
 	}
 
 	/***
-	 * 
+	 *
 	 * Retrieving all the Virtual Machines created
-	 *  
+	 *
 	 */
 	private ArrayList<VirtualMachine> getVirtualMachines() {
 		try {
@@ -977,7 +991,7 @@ public class AzureCommunication {
 	/***
 	 *
 	 * Retrieving the Power State of all the Virtual Machines
-	 *  
+	 *
 	 */
 	private ArrayList<PowerState> getPowerStates() {
 		List<VirtualMachine> vms = getVirtualMachines();
@@ -994,14 +1008,14 @@ public class AzureCommunication {
 	/***
 	 *
 	 * Retrieving the Power State of all the Virtual Machines
-	 *  
+	 *
 	 */
 	public boolean checkStorageAccountExists(String storageAccount)
-	{		
-		try 
+	{
+		try
 		{
-			Iterator<StorageAccount> iterator= storageClient.getStorageAccountsOperations().listByResourceGroup(ph.getResourceGroupName()).getStorageAccounts().iterator();
-			while (iterator.hasNext())
+            Iterator<StorageAccount> iterator = getStorageAccounts();
+            while (iterator.hasNext())
 			{
 				StorageAccount strAcc = (StorageAccount) iterator.next();
 				if(strAcc.getName().equals(storageAccount))
@@ -1019,9 +1033,35 @@ public class AzureCommunication {
 		return false;
 	}
 
-	public void test() 
-	{
-		
+    protected Iterator<StorageAccount> getStorageAccounts() throws ServiceException, IOException, URISyntaxException {
+	    return storageClient.getStorageAccountsOperations().listByResourceGroup(ph.getResourceGroupName()).getStorageAccounts().iterator();
+    }
+
+    protected AuthenticationResult acquireToken(AuthenticationContext context, String clientId,
+                                                String apiUserName, String apiPassword)
+            throws ExecutionException, InterruptedException {
+        return context.acquireToken(RESOURCE_BASE_URL, clientId,
+                apiUserName, apiPassword, null).get();
+    }
+
+    protected AuthenticationResult acquireToken(AuthenticationContext context,
+                                                ClientCredential clientCredential) throws ExecutionException, InterruptedException {
+        return context.acquireToken(RESOURCE_BASE_URL, clientCredential, null).get();
+    }
+
+	public ResourceManagementClient getResourceClient() {
+		return resourceClient;
 	}
-	
+
+	public ComputeManagementClient getComputeClient() {
+		return computeClient;
+	}
+
+	public NetworkResourceProviderClient getNetworkClient() {
+		return networkClient;
+	}
+
+	public StorageManagementClient getStorageClient() {
+		return storageClient;
+	}
 }

@@ -112,6 +112,32 @@ public class AzureServiceExceptionTest {
     }
 
     @Test
+    public void testAzureServiceException_serviceException_message_lowercase() throws AbortException {
+        // given
+        ServiceException serviceExceptionMock = mock(ServiceException.class);
+        when(serviceExceptionMock.getMessage()).thenReturn(MESSAGE);
+        ex = new AzureServiceException(serviceExceptionMock){
+            @Override
+            public JsonNode readTree(ObjectMapper mapper, ServiceException ex) throws IOException {
+                JsonNode responseDoc = mock(JsonNode.class);
+                JsonNode jsonNodeValue = mock(JsonNode.class);
+                when(jsonNodeValue.getTextValue()).thenReturn(MESSAGE);
+                when(responseDoc.get("message")).thenReturn(jsonNodeValue);
+                return responseDoc;
+            }
+        };
+        when(azureComm.getAvailableRegions()).thenThrow(ex);
+        // when
+        try {
+            azureComm.getAvailableRegions();
+        } catch (AzureServiceException e) {
+            // then
+            Assert.assertTrue(e.getCause() instanceof ServiceException);
+            Assert.assertTrue(e.getErrorMessage().equals(MESSAGE));
+        }
+    }
+
+    @Test
     public void testAzureServiceException_serviceException_noErrorCodeOrMessage() throws AbortException {
         // given
         ServiceException serviceExceptionMock = mock(ServiceException.class);
@@ -162,6 +188,65 @@ public class AzureServiceExceptionTest {
             Assert.assertTrue(e.getCause() instanceof ServiceException);
             Assert.assertTrue(e.getErrorCode().equals(ERROR_CODE));
         }
+    }
+
+    @Test
+    public void testAzureServiceException_serviceException_errorCode_lowercase() throws AbortException {
+        // given
+        ServiceException serviceExceptionMock = mock(ServiceException.class);
+        when(serviceExceptionMock.getMessage()).thenReturn(MESSAGE);
+        ex = new AzureServiceException(serviceExceptionMock){
+            @Override
+            public JsonNode readTree(ObjectMapper mapper, ServiceException ex) throws IOException {
+                JsonNode responseDoc = mock(JsonNode.class);
+                JsonNode jsonNodeValue = mock(JsonNode.class);
+                when(jsonNodeValue.getTextValue()).thenReturn(ERROR_CODE);
+                when(responseDoc.get("code")).thenReturn(jsonNodeValue);
+                return responseDoc;
+            }
+        };
+        when(azureComm.getAvailableRegions()).thenThrow(ex);
+        // when
+        try {
+            azureComm.getAvailableRegions();
+        } catch (AzureServiceException e) {
+            // then
+            Assert.assertTrue(e.getCause() instanceof ServiceException);
+            Assert.assertTrue(e.getErrorCode().equals(ERROR_CODE));
+        }
+    }
+
+    @Test
+    public void testAzureServiceException_serviceException_exception() throws AbortException {
+        // given
+        ServiceException serviceExceptionMock = mock(ServiceException.class);
+        when(serviceExceptionMock.getMessage()).thenReturn(MESSAGE);
+        ex = new AzureServiceException(serviceExceptionMock){
+            @Override
+            public JsonNode readTree(ObjectMapper mapper, ServiceException ex) throws IOException {
+                throw new IOException();
+            }
+        };
+        when(azureComm.getAvailableRegions()).thenThrow(ex);
+        // when
+        try {
+            azureComm.getAvailableRegions();
+        } catch (AzureServiceException e) {
+            // then
+            Assert.assertTrue(e.getCause() instanceof ServiceException);
+        }
+    }
+
+    @Test
+    public void readTreeTest() throws IOException {
+        // given
+        ex = new AzureServiceException(MESSAGE);
+        // when
+        ObjectMapper mapperMock = mock(ObjectMapper.class);
+        ServiceException srvExMock = mock(ServiceException.class);
+        ex.readTree(mapperMock, srvExMock);
+        // then
+        // no exceptions
     }
 
 }

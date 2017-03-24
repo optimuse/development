@@ -100,7 +100,7 @@ public class AzureServiceException extends AzureClientException {
         }
     }
 
-    public JsonNode readTree(ObjectMapper mapper, ServiceException ex) throws IOException {
+    protected JsonNode readTree(ObjectMapper mapper, ServiceException ex) throws IOException {
         return mapper.readTree(ex.getMessage());
     }
 
@@ -114,21 +114,8 @@ public class AzureServiceException extends AzureClientException {
     /**
      * Azure
      */
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    /**
-     * Azure
-     */
     public String getErrorMessage() {
         return errorMessage;
     }
 
-    /**
-     * Azure
-     */
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
 }
