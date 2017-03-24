@@ -7,6 +7,8 @@
  *******************************************************************************/
 package org.oscm.app.azure.exception;
 
+import java.io.IOException;
+
 import com.microsoft.windowsazure.exception.ServiceException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -62,14 +64,13 @@ public class AzureServiceException extends AzureClientException {
         }
         if (getCause() instanceof ServiceException) {
             ServiceException ex = (ServiceException) getCause();
-            if (ex.getError().getCode() != null) {
+            if (ex.getError() != null && ex.getError().getCode() != null) {
                 this.errorCode = ex.getError().getCode();
                 this.errorMessage = ex.getError().getMessage();
             } else if (ex.getMessage() != null) {
                 try {
                     ObjectMapper objectMapper = new ObjectMapper();
-                    JsonNode responseDoc = objectMapper.readTree(ex
-                            .getMessage());
+                    JsonNode responseDoc = readTree(objectMapper, ex);
 
                     JsonNode errorNode = responseDoc.get("Error");
                     if (errorNode == null) {
@@ -93,10 +94,14 @@ public class AzureServiceException extends AzureClientException {
                                 .getTextValue();
                     }
                 } catch (Exception e1) {
-                    // å‡¦ç�†ã�ªã�—ã€‚
+                    e1.printStackTrace();
                 }
             }
         }
+    }
+
+    public JsonNode readTree(ObjectMapper mapper, ServiceException ex) throws IOException {
+        return mapper.readTree(ex.getMessage());
     }
 
     /**
