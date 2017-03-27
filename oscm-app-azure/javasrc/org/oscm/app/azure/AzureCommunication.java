@@ -269,7 +269,6 @@ public class AzureCommunication {
 	private String getTemplate(String url, String operation)     throws AbortException {
 		logger.debug("Template URL: " + url);
 		try {
-
 			URL source = new URL(url);
 			BOMInputStream in;
             in = getBOMInputStream(source, url);
@@ -306,7 +305,7 @@ public class AzureCommunication {
 		int numberOfInstances=Integer.parseInt(ph.getInstanceCount());
 		try {
 			@SuppressWarnings("unchecked")
-			Map<String, Object> parametersMap = new Gson().fromJson(parameters,HashMap.class);
+			Map<String, Object> parametersMap = getParametersMap(parameters);
 
 			//  updateParameter(parametersMap);
 			String virtualMachineImageId=getVirtualMachineImageID();
@@ -352,6 +351,10 @@ public class AzureCommunication {
 					+ "_failed_customer"), Messages.getAll("error_" + operation
 							+ "_template_read_failed_provider", url, e.getMessage()));
 		}
+	}
+
+	protected Map<String, Object> getParametersMap(String parameters) {
+		return new Gson().fromJson(parameters,HashMap.class);
 	}
 
 	/**
@@ -458,7 +461,7 @@ public class AzureCommunication {
 
 				VirtualMachine machine= iterator.next();
 
-				computeClient.getVirtualMachinesOperations().beginDeleting(ph.getResourceGroupName(),machine.getName());
+				getComputeClient().getVirtualMachinesOperations().beginDeleting(ph.getResourceGroupName(),machine.getName());
 
 				logger.info("Deleting VM-"+machine.getName()+"...");
 
@@ -473,7 +476,7 @@ public class AzureCommunication {
 				}
 				if(!iterator.hasNext())
 				{
-					String state=computeClient.getVirtualMachinesOperations().get(ph.getResourceGroupName(), machine.getName()).getVirtualMachine().getProvisioningState();
+					String state=getComputeClient().getVirtualMachinesOperations().get(ph.getResourceGroupName(), machine.getName()).getVirtualMachine().getProvisioningState();
 					while (!state.equals(ProvisioningState.DELETED))
 					{
 						try
@@ -502,12 +505,12 @@ public class AzureCommunication {
 			//Deleting Storage Account
 			if(!exisitingStorageAccount)
 			{
-				String key1=storageClient.getStorageAccountsOperations().listKeys(ph.getResourceGroupName(), ph.getStorageAccount()).getStorageAccountKeys().getKey1();
+				String key1=getStorageClient().getStorageAccountsOperations().listKeys(ph.getResourceGroupName(), ph.getStorageAccount()).getStorageAccountKeys().getKey1();
 
 				String connectionString = "DefaultEndpointsProtocol=https;AccountName="+ph.getStorageAccount()+";AccountKey="+key1+";";
 				CloudStorageAccount account = null;
 				try {
-					account = CloudStorageAccount.parse(connectionString);
+					account = parseConnectionString(connectionString);
 				} catch (InvalidKeyException e) {
 					logger.debug("Invalid Key !!");
 					e.printStackTrace();
@@ -515,7 +518,7 @@ public class AzureCommunication {
 
 				CloudBlobClient client = account.createCloudBlobClient();
 
-				Iterator<CloudBlobContainer> containerIterator=client.listContainers().iterator();
+				Iterator<CloudBlobContainer> containerIterator=getCloudBlobContainerIterator(client);
 				int i = 0;
 				while(containerIterator.hasNext()) {
 				    i++;
@@ -527,7 +530,7 @@ public class AzureCommunication {
 				}
 				else
 				{
-					storageClient.getStorageAccountsOperations().delete(ph.getResourceGroupName(), ph.getStorageAccount());
+					getStorageClient().getStorageAccountsOperations().delete(ph.getResourceGroupName(), ph.getStorageAccount());
 					logger.info("Deleting Storage Account-"+ph.getStorageAccount()+"...");
 					logger.info("Storage Account deleted !!");
 				}
@@ -550,11 +553,11 @@ public class AzureCommunication {
 
 			//Deleting Deployment
 			logger.info("Deleting deployment-"+ph.getDeploymentName()+"..");
-			resourceClient.getDeploymentsOperations().beginDeleting(ph.getResourceGroupName(), ph.getDeploymentName());
-			boolean exist=resourceClient.getDeploymentsOperations().checkExistence(ph.getResourceGroupName(), ph.getDeploymentName()).isExists();
+			getResourceClient().getDeploymentsOperations().beginDeleting(ph.getResourceGroupName(), ph.getDeploymentName());
+			boolean exist=getResourceClient().getDeploymentsOperations().checkExistence(ph.getResourceGroupName(), ph.getDeploymentName()).isExists();
 			while (exist)
 			{
-				exist=resourceClient.getDeploymentsOperations().checkExistence(ph.getResourceGroupName(), ph.getDeploymentName()).isExists();
+				exist=getResourceClient().getDeploymentsOperations().checkExistence(ph.getResourceGroupName(), ph.getDeploymentName()).isExists();
 			}
 			logger.info("Deployment deleted !!");
 		}
@@ -563,6 +566,14 @@ public class AzureCommunication {
 
 		}
 
+	}
+
+	protected Iterator<CloudBlobContainer> getCloudBlobContainerIterator(CloudBlobClient client){
+		return client.listContainers().iterator();
+	}
+
+	protected CloudStorageAccount parseConnectionString(String connectionString) throws URISyntaxException, InvalidKeyException {
+		return CloudStorageAccount.parse(connectionString);
 	}
 
 	/***
@@ -947,12 +958,12 @@ public class AzureCommunication {
 			{
 				for(int i=1;i<=n;i++)
 				{
-					vmList.add(computeClient.getVirtualMachinesOperations().get(ph.getResourceGroupName(), ph.getVMName()+i).getVirtualMachine());
+					vmList.add(getComputeClient().getVirtualMachinesOperations().get(ph.getResourceGroupName(), ph.getVMName()+i).getVirtualMachine());
 				}
 			}
 			else
 			{
-				vmList.add(computeClient.getVirtualMachinesOperations().get(ph.getResourceGroupName(), ph.getVMName()).getVirtualMachine());
+				vmList.add(getComputeClient().getVirtualMachinesOperations().get(ph.getResourceGroupName(), ph.getVMName()).getVirtualMachine());
 			}
 			logger.info("Size of final VM list : "+vmList.size());
 			return vmList;

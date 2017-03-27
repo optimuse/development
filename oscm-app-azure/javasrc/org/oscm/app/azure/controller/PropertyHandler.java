@@ -182,7 +182,7 @@ public class PropertyHandler {
      *            The key to retrieve the setting for
      * @return the parameter value corresponding to the provided key
      */
-    private static String getValidatedProperty(Map<String, String> sourceProps,
+    protected static String getValidatedProperty(Map<String, String> sourceProps,
             String key) {
         String value = sourceProps.get(key);
         if (value == null) {
@@ -333,7 +333,7 @@ public class PropertyHandler {
     /**
      * Azure
      */
-    private String getTemplateName() {
+    protected String getTemplateName() {
         return getValidatedProperty(settings.getParameters(), TEMPLATE_NAME);
     	
     }
@@ -354,7 +354,7 @@ public class PropertyHandler {
     /**
      * Azure
      */
-    private String getTemplateParametersName() {
+    protected String getTemplateParametersName() {
         String value = settings.getParameters().get(TEMPLATE_PARAMETERS_NAME);
         return StringUtils.isBlank(value) ? null : value;
     }
