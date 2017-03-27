@@ -385,7 +385,7 @@ public class AzureCommunication {
 	 *
 	 *
 	 */
-	private AzureClientException createAndLogAzureException(
+	protected AzureClientException createAndLogAzureException(
 			String message, Throwable t) {
 		logger.debug("createAndLogAzureException Name: {}, Message: {}", t
 				.getClass().getName(), t.getMessage());
@@ -467,7 +467,7 @@ public class AzureCommunication {
 				for (NetworkInterfaceReference nicReference : nics)
 				{
 					String[] nicURI = nicReference.getReferenceUri().split("/");
-					NetworkInterface nic = networkClient.getNetworkInterfacesOperations()
+					NetworkInterface nic = getNetworkClient().getNetworkInterfacesOperations()
 							.get(ph.getResourceGroupName(), nicURI[nicURI.length - 1]).getNetworkInterface();
 					nicNames.add(nic.getName());
 
@@ -496,7 +496,7 @@ public class AzureCommunication {
 				String nicName = (String) nicIterator.next();
 				//Deleting Network Interface
 				logger.info("Deleting Network Interface- "+nicName+"...");
-				networkClient.getNetworkInterfacesOperations().beginDeleting(ph.getResourceGroupName(),nicName);
+				getNetworkClient().getNetworkInterfacesOperations().beginDeleting(ph.getResourceGroupName(),nicName);
 				logger.info("Network Interface deleted !!");
 			}
 
@@ -559,7 +559,7 @@ public class AzureCommunication {
 			}
 			logger.info("Deployment deleted !!");
 		}
-		catch (IOException | ServiceException | URISyntaxException | ExecutionException | InterruptedException e) {
+		catch (IOException | ServiceException | URISyntaxException | ExecutionException | InterruptedException | InvalidKeyException e) {
 			throw createAndLogAzureException("Delete Resources failed: ", e);
 
 		}
@@ -579,23 +579,22 @@ public class AzureCommunication {
 	 * Deleting VM Container
 	 *
 	 */
-	public void deleteVMContainer() throws IOException, ServiceException, URISyntaxException
-	{
+	public void deleteVMContainer() throws IOException, ServiceException, URISyntaxException, InvalidKeyException {
 		//Deleting VM Container
 		logger.info("Deleting VM Container inside Storage Account: "+ph.getStorageAccount());
-		String key1=storageClient.getStorageAccountsOperations().listKeys(ph.getResourceGroupName(), ph.getStorageAccount()).getStorageAccountKeys().getKey1();
+		String key1=getStorageClient().getStorageAccountsOperations().listKeys(ph.getResourceGroupName(), ph.getStorageAccount()).getStorageAccountKeys().getKey1();
 
 		String connectionString = "DefaultEndpointsProtocol=https;AccountName="+ph.getStorageAccount()+";AccountKey="+key1+";";
 		CloudStorageAccount account = null;
 		try {
-			account = CloudStorageAccount.parse(connectionString);
+			account = parseConnectionString(connectionString);
 		} catch (InvalidKeyException e) {
 			logger.debug("Invalid Key !!");
-			e.printStackTrace();
+			throw e;
 		}
 		CloudBlobClient client = account.createCloudBlobClient();
 
-		Iterator<CloudBlobContainer> containerIterator=client.listContainers().iterator();
+		Iterator<CloudBlobContainer> containerIterator=getCloudBlobContainerIterator(client);
 		boolean isDelete = false;
 		while (containerIterator.hasNext())
 		{
@@ -634,7 +633,7 @@ public class AzureCommunication {
 		List<VirtualMachine> vms = getVirtualMachines();
 		try {
 			for (VirtualMachine vm : vms) {
-				computeClient.getVirtualMachinesOperations().beginStarting(
+				getComputeClient().getVirtualMachinesOperations().beginStarting(
 						ph.getResourceGroupName(), vm.getName());
 			}
 		} catch (IOException | ServiceException e) {
@@ -654,7 +653,7 @@ public class AzureCommunication {
 		List<VirtualMachine> vms = getVirtualMachines();
 		try {
 			for (VirtualMachine vm : vms) {
-				computeClient.getVirtualMachinesOperations().beginDeallocating(
+				getComputeClient().getVirtualMachinesOperations().beginDeallocating(
 						ph.getResourceGroupName(), vm.getName());
 			}
 		} catch (IOException | ServiceException e) {
@@ -672,7 +671,7 @@ public class AzureCommunication {
 		logger.debug("AzureCommunication.getDeploymentState entered: "+ph.getDeploymentName());
 
 		try {
-			DeploymentPropertiesExtended deploymentProperties = resourceClient
+			DeploymentPropertiesExtended deploymentProperties = getResourceClient()
 					.getDeploymentsOperations()
 					.get(ph.getResourceGroupName(), ph.getDeploymentName())
 					.getDeployment().getProperties();
@@ -683,7 +682,7 @@ public class AzureCommunication {
 
 			AzureState azureState = new AzureState(provisioningState);
 			if (azureState.isFailed()) {
-				List<DeploymentOperation> deploymentOperations = resourceClient
+				List<DeploymentOperation> deploymentOperations = getResourceClient()
 						.getDeploymentOperationsOperations()
 						.list(ph.getResourceGroupName(),
 								ph.getDeploymentName(), null).getOperations();
@@ -802,7 +801,7 @@ public class AzureCommunication {
 						.getNetworkInterfaces();
 				for (NetworkInterfaceReference nicReference : nics) {
 					String[] nicURI = nicReference.getReferenceUri().split("/");
-					NetworkInterface nic = networkClient
+					NetworkInterface nic = getNetworkClient()
 							.getNetworkInterfacesOperations()
 							.get(ph.getResourceGroupName(),
 									nicURI[nicURI.length - 1])
@@ -819,7 +818,7 @@ public class AzureCommunication {
 								String[] pipID = ipConfiguration
 										.getPublicIpAddress().getId()
 										.split("/");
-								PublicIpAddress pip = networkClient
+								PublicIpAddress pip = getNetworkClient()
 										.getPublicIpAddressesOperations()
 										.get(ph.getResourceGroupName(),
 												pipID[pipID.length - 1])
@@ -872,7 +871,7 @@ public class AzureCommunication {
 	public ArrayList<String> getAvailableRegions() {
 		List<ProviderResourceType> resourceTypes;
 		try {
-			resourceTypes = resourceClient.getProvidersOperations()
+			resourceTypes = getResourceClient().getProvidersOperations()
 					.get("Microsoft.Resources").getProvider()
 					.getResourceTypes();
 		} catch (IOException | URISyntaxException | ServiceException e) {
@@ -935,7 +934,7 @@ public class AzureCommunication {
 	 */
 	private boolean isExistsResourceGroup() {
 		try {
-			return resourceClient.getResourceGroupsOperations()
+			return getResourceClient().getResourceGroupsOperations()
 					.checkExistence(ph.getResourceGroupName()).isExists();
 		} catch (IOException | ServiceException e) {
 			throw createAndLogAzureException(
@@ -979,7 +978,7 @@ public class AzureCommunication {
 	private PowerState getPowerState(VirtualMachine vm) {
 		VirtualMachineInstanceView instanceView;
 		try {
-			instanceView = computeClient
+			instanceView = getComputeClient()
 					.getVirtualMachinesOperations()
 					.getWithInstanceView(ph.getResourceGroupName(),
 							vm.getName()).getVirtualMachine().getInstanceView();
@@ -1002,7 +1001,7 @@ public class AzureCommunication {
 	 * Retrieving the Power State of all the Virtual Machines
 	 *
 	 */
-	private ArrayList<PowerState> getPowerStates() {
+	protected ArrayList<PowerState> getPowerStates() {
 		List<VirtualMachine> vms = getVirtualMachines();
 		ArrayList<PowerState> powerStates = new ArrayList<>();
 		for (VirtualMachine vm : vms) {
