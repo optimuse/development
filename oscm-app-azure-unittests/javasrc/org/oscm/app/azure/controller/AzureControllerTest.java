@@ -1,9 +1,7 @@
 /*******************************************************************************
- *                                                                              
- *  Copyright FUJITSU LIMITED 2017
- *                                                                                                                                 
- *  Creation Date: 27 paź 2015                                                      
- *                                                                              
+ *
+ *  Copyright FUJITSU LIMITED 2016
+ *
  *******************************************************************************/
 
 package org.oscm.app.azure.controller;

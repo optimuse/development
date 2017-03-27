@@ -2,8 +2,6 @@
  *
  *  Copyright FUJITSU LIMITED 2016
  *
- *  Creation Date: 2016-07-29
- *
  *******************************************************************************/
 package org.oscm.app.azure;
 
@@ -232,7 +230,7 @@ public class AzureCommunication {
 	 *
 	 *
 	 */
-	private AuthenticationResult getAccessTokenFromClientCredentials(
+	protected AuthenticationResult getAccessTokenFromClientCredentials(
 			String tenantId, String clientId,
 			String clientSecret) throws MalformedURLException,
 	InterruptedException, ExecutionException,

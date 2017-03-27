@@ -1,3 +1,8 @@
+/*******************************************************************************
+ *
+ *  Copyright FUJITSU LIMITED 2016
+ *
+ *******************************************************************************/
 package org.oscm.app.azure;
 
 import java.io.IOException;
@@ -180,6 +185,13 @@ public class AzureCommunicationTest {
         azureComm.deleteInstance();
         // then
         verify(resourceManagementClient, times(2)).getDeploymentsOperations();
+    }
+
+    @Test
+    public void getAccessTokenFromClientCredentialsTest() {
+        // given
+        // when
+        // then
     }
 
 
