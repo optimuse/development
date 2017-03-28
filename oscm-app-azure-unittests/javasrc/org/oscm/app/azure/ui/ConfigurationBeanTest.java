@@ -6,6 +6,7 @@
 package org.oscm.app.azure.ui;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +57,17 @@ public class ConfigurationBeanTest {
         final HashMap<String, String> items = configurationBean.getItems();
         // then
         assertTrue(items.size() == 4);
+    }
+
+    @Test
+    public void getItemKeysTest() throws APPlatformException {
+        // given
+        // when
+        final List<String> itemKeys = configurationBean.getItemKeys();
+        // then
+        assertTrue(itemKeys.isEmpty());
+        verify(mockAppService, times(1))
+                .getControllerSettings(any(String.class), any(PasswordAuthentication.class));
     }
 
     @Test

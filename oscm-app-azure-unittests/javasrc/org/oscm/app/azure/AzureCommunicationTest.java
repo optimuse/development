@@ -120,6 +120,13 @@ public class AzureCommunicationTest {
     private String state = "Creating";
     private boolean doesResourceGroupExist = false;
     private String powerstate = "Powerstate/RUNNING";
+    private boolean throwBOMEx = false;
+    private boolean throwCreateOrUpdateEx = false;
+    private boolean throwInstanceStartingEx = false;
+    private boolean throwInstanceStoppingEx = false;
+    private boolean throwResourceClientEx = false;
+    private boolean skipPublicIp = false;
+    private boolean skipBothIps = false;
 
     @Before
     public void setUp() {
@@ -179,9 +186,67 @@ public class AzureCommunicationTest {
         // no exceptions
     }
 
+    @Test(expected = AzureClientException.class)
+    public void constructor_withClientSecret_emptyClientId() {
+        // given
+        when(ph.getClientSecret()).thenReturn("secret");
+        // when
+        azureComm = new AzureCommunication(ph) {
+            @Override
+            protected AuthenticationResult acquireToken(AuthenticationContext context, String clientId,
+                                                        String apiUserName, String apiPassword)
+                    throws ExecutionException, InterruptedException {
+
+                String accessTokenType = "accessTokenType";
+                String accessToken = "accessToken";
+                String refreshToken = "refreshToken";
+                long expiresIn = 1000000L;
+                String idToken = "idToken";
+                boolean isMultipleResourcesRefreshToken = false;
+                AuthenticationResult mockAuthRes = new AuthenticationResult(accessTokenType, accessToken, refreshToken,
+                        expiresIn, idToken, null, isMultipleResourcesRefreshToken);
+                return mockAuthRes;
+            }
+        };
+        // then
+        // no exceptions
+    }
+
     @Test
     public void createInstanceTest() throws Exception {
         // given
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        azureComm.createInstance();
+        // then
+        verify(resourceManagementClient, times(1)).getDeploymentsOperations();
+    }
+
+    @Test(expected = AzureClientException.class)
+    public void createInstanceTest_exceptionInBOM() throws Exception {
+        // given
+        throwBOMEx = true;
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        azureComm.createInstance();
+        // then
+        verify(resourceManagementClient, times(1)).getDeploymentsOperations();
+    }
+
+    @Test(expected = AzureClientException.class)
+    public void createInstanceTest_exceptionIncreateOrUpdate() throws Exception {
+        // given
+        throwCreateOrUpdateEx = true;
         when(ph.getRegion()).thenReturn(REGION);
         when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
         when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
@@ -322,6 +387,26 @@ public class AzureCommunicationTest {
         // no exceptions
     }
 
+    @Test(expected = AzureClientException.class)
+    public void startInstanceTest_exception() throws ServiceException, IOException, URISyntaxException, InvalidKeyException {
+        // given
+        throwInstanceStartingEx = true;
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        azureComm.startInstance();
+        // then
+        // no exceptions
+    }
+
     @Test
     public void stopInstanceTest() throws ServiceException, IOException, URISyntaxException, InvalidKeyException {
         // given
@@ -341,9 +426,53 @@ public class AzureCommunicationTest {
         // no exceptions
     }
 
+    @Test(expected = AzureClientException.class)
+    public void stopInstanceTest_exception() throws ServiceException, IOException, URISyntaxException, InvalidKeyException {
+        // given
+        throwInstanceStoppingEx = true;
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        azureComm.stopInstance();
+        // then
+        // no exceptions
+    }
+
     @Test
     public void getDeploymentStateTest() throws ServiceException, IOException, URISyntaxException, InvalidKeyException {
         // given
+        state = "Running";
+
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        final AzureState deploymentState = azureComm.getDeploymentState();
+        // then
+        Assert.assertTrue(deploymentState != null);
+        Assert.assertTrue(deploymentState.getProvisioningState().equals("Running"));
+        // no exceptions
+    }
+
+    @Test(expected = AzureClientException.class)
+    public void getDeploymentStateTest_exception() throws ServiceException, IOException, URISyntaxException, InvalidKeyException {
+        // given
+        throwResourceClientEx = true;
         state = "Running";
 
         when(ph.getRegion()).thenReturn(REGION);
@@ -426,6 +555,84 @@ public class AzureCommunicationTest {
         final AzureState deletingState = azureComm.getDeletingState();
         // then
         Assert.assertTrue(deletingState.getProvisioningState().equals("Deleting"));
+    }
+
+    @Test
+    public void getStartingStateTest() {
+        // given
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        final AzureState startingState = azureComm.getStartingState();
+        // then
+        Assert.assertTrue(startingState.getProvisioningState().equals("Succeeded"));
+    }
+
+    @Test
+    public void getStartingStateTest2() {
+        // given
+        powerstate = "Powerstate/DEALLOCATED";
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        final AzureState startingState = azureComm.getStartingState();
+        // then
+        Assert.assertTrue(startingState.getProvisioningState().equals("Running"));
+    }
+
+    @Test
+    public void getStoppingStateTest() {
+        // given
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        final AzureState startingState = azureComm.getStoppingState();
+        // then
+        Assert.assertTrue(startingState.getProvisioningState().equals("Running"));
+    }
+
+    @Test
+    public void getStoppingStateTest2() {
+        // given
+        powerstate = "Powerstate/DEALLOCATED";
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        final AzureState startingState = azureComm.getStoppingState();
+        // then
+        Assert.assertTrue(startingState.getProvisioningState().equals("Succeeded"));
     }
 
     @Test
@@ -532,6 +739,52 @@ public class AzureCommunicationTest {
         Assert.assertTrue(output.contains("vmname"));
     }
 
+    @Test
+    public void getAccessInfoTest_prvIp() {
+        // given
+        skipPublicIp = true;
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        final AccessInfo state = azureComm.getAccessInfo("state");
+        // then
+        final String output = state.getOutput("en");
+        Assert.assertTrue(output.contains("somePrvIp"));
+        Assert.assertTrue(output.contains("state"));
+        Assert.assertTrue(output.contains("vmname"));
+    }
+
+    @Test
+    public void getAccessInfoTest_noIps() {
+        // given
+        skipPublicIp = true;
+        skipBothIps = true;
+        when(ph.getRegion()).thenReturn(REGION);
+        when(ph.getResourceGroupName()).thenReturn(RERSOURCE_GROUP_NAME);
+        when(ph.getStorageAccount()).thenReturn(STORAGE_ACCOUNT_NAME);
+        when(ph.getTemplateUrl()).thenReturn(TEMPLATE_URL);
+        when(ph.getDeploymentName()).thenReturn(DEPLOYMENT_NAME);
+        when(ph.getTemplateParametersUrl()).thenReturn(TEMPLATE_PARAMETER_URL);
+        when(ph.getInstanceCount()).thenReturn("1");
+        when(ph.getVirtualMachineImageID()).thenReturn(IMAGE_ID_WINDOWS_SERVER_2012);
+        when(ph.getVMName()).thenReturn(VMNAME);
+        azureComm = prepareAzureCommWithMocks();
+        // when
+        final AccessInfo state = azureComm.getAccessInfo("state");
+        // then
+        final String output = state.getOutput("en");
+        Assert.assertTrue(output.contains("state"));
+        Assert.assertTrue(output.contains("vmname"));
+    }
+
 
     private AzureCommunication prepareAzureCommWithMocks() {
         return new AzureCommunication(ph) {
@@ -564,7 +817,9 @@ public class AzureCommunicationTest {
 
             @Override
             protected void createOrUpdate() throws ServiceException, IOException, URISyntaxException {
-
+                if (throwCreateOrUpdateEx) {
+                    throw new IOException("ex");
+                }
             }
 
             @Override
@@ -595,6 +850,9 @@ public class AzureCommunicationTest {
 
             @Override
             protected String getBOMtoString(BOMInputStream in) throws IOException {
+                if (throwBOMEx) {
+                    throw new IOException("ex");
+                }
                 return "bomToString";
             }
 
@@ -616,6 +874,9 @@ public class AzureCommunicationTest {
                     when(deplPropsExtended.getProvisioningState()).thenReturn(state);
                     when(deployment.getProperties()).thenReturn(deplPropsExtended);
                     when(deploymentGetResult.getDeployment()).thenReturn(deployment);
+                    if (throwResourceClientEx) {
+                        when(operations.get(any(String.class), any(String.class))).thenThrow(new IOException("ex"));
+                    }
                     when(operations.get(any(String.class), any(String.class))).thenReturn(deploymentGetResult);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -695,6 +956,12 @@ public class AzureCommunicationTest {
                     VirtualMachineGetResponse vmGetResponse = mock(VirtualMachineGetResponse.class);
                     when(vmGetResponse.getVirtualMachine()).thenReturn(vmMock);
                     when(vmOps.getWithInstanceView(any(String.class), any(String.class))).thenReturn(vmGetResponse);
+                    if (throwInstanceStartingEx) {
+                        when(vmOps.beginStarting(any(String.class), any(String.class))).thenThrow(new IOException("ex"));
+                    }
+                    if (throwInstanceStoppingEx) {
+                        when(vmOps.beginDeallocating(any(String.class), any(String.class))).thenThrow(new IOException("ex"));
+                    }
                     when(computeManagementClient.getVirtualMachinesOperations()).thenReturn(vmOps);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -753,9 +1020,16 @@ public class AzureCommunicationTest {
                     NetworkInterface networkInterface = mock(NetworkInterface.class);
                     ArrayList<NetworkInterfaceIpConfiguration> configurations = new ArrayList<>();
                     NetworkInterfaceIpConfiguration networkInterfaceConfiguration = mock(NetworkInterfaceIpConfiguration.class);
-                    ResourceId resourceId = mock(ResourceId.class);
-                    when(resourceId.getId()).thenReturn("someId");
-                    when(networkInterfaceConfiguration.getPublicIpAddress()).thenReturn(resourceId);
+                    if (!skipPublicIp) {
+                        ResourceId resourceId = mock(ResourceId.class);
+                        when(resourceId.getId()).thenReturn("someIp");
+                        when(networkInterfaceConfiguration.getPublicIpAddress()).thenReturn(resourceId);
+                    } else if (skipPublicIp && !skipBothIps) {
+                        when(networkInterfaceConfiguration.getPrivateIpAddress()).thenReturn("somePrvIp");
+                    } else {
+                        when(networkInterfaceConfiguration.getPublicIpAddress()).thenReturn(null);
+                        when(networkInterfaceConfiguration.getPrivateIpAddress()).thenReturn(null);
+                    }
                     configurations.add(networkInterfaceConfiguration);
                     when(networkInterface.getIpConfigurations()).thenReturn(configurations);
                     when(networkInterface.isPrimary()).thenReturn(true);

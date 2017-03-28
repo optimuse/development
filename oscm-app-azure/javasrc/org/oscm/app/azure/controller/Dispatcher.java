@@ -206,7 +206,7 @@ public class Dispatcher {
      * @return next <code>FlowState</code>
      * @throws APPlatformException
      */
-    private FlowState dispatchProvisioningProcess(final FlowState flowState,
+    protected FlowState dispatchProvisioningProcess(final FlowState flowState,
             InstanceStatus status) throws APPlatformException {
         logger.debug("Dispatcher.dispatchProvisioningProcess entered");
         
@@ -319,7 +319,7 @@ public class Dispatcher {
      *            status of the application instance
      * @return next <code>FlowState</code>
      */
-    private FlowState dispatchOperationProcess(final FlowState flowState,
+    protected FlowState dispatchOperationProcess(final FlowState flowState,
             InstanceStatus status) {
         logger.debug("Dispatcher.dispatchOperationProcess entered");
         azureCom = getAzureCommunication();
@@ -384,7 +384,7 @@ public class Dispatcher {
      *            status of the application instance
      * @return next <code>FlowState</code>
      */
-    private FlowState dispatchActivationProcess(final FlowState flowState,
+    protected FlowState dispatchActivationProcess(final FlowState flowState,
             InstanceStatus status) {
         logger.debug("Dispatcher.dispatchActivationProcess entered");
 
