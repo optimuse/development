@@ -29,4 +29,3 @@
     <classpathentry kind="lib" path="/libraries/glassfish4/javalib/javaee.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
-0
