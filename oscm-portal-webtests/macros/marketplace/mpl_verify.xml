@@ -68,6 +68,7 @@
     <attribute name="topErrorMessage" default="true" />
     <attribute name="idVerification" default="false" />
     <attribute name="regex" default="true" />
+    <attribute name="saveButtonXpath" default="true" />
     <sequential>
       <!-- Check mandatory field values -->
       <ifStep description="Mandatory field?" test="@{required}">
@@ -90,8 +91,16 @@
         <then>
             	<!-- ID verification-->
       	      	<dataDriven tableContainer="data/invalidInput/@{fieldType}.xls">
-      	      	  <setInputField htmlId="@{fieldId}" value="${value}" />
+                  <setInputField htmlId="@{fieldId}" value="${value}" />
+                  <ifStep description="Test if id field is processed" test="@{saveButtonXpath}">
+                  <then>
                   <clickButton label="${button.save}" />
+                  </then>
+                    <else>
+                      <clickElement xpath="@{saveButtonXpath}" />
+                    </else>
+                  </ifStep>
+
       	      	  <verifyXPath
                           xpath="//*[@id='@{fieldId}ErrorMsg:@{fieldId}']//*[contains(text(),'Invalid character(s)')]" />
         	        </dataDriven>
@@ -119,10 +128,12 @@
     <attribute name="att2Name" default="att2" />
     <attribute name="idVerification" default="false" />
     <attribute name="regex" default="true" />
+    <attribute name="saveButtonXpath" default="true" />
     <sequential>
       <mpl_verify.invalidFieldValue regex="@{regex}" hintMsgKey="@{hintMsgKey}" fieldId="@{fieldId}" fieldType="@{fieldType}"
                                     required="@{required}" buttonLinkId="@{buttonLinkId}" att0Name="@{att0Name}"
-                                    att1Name="@{att1Name}" att2Name="@{att2Name}" idVerification="@{idVerification}" />
+                                    att1Name="@{att1Name}" att2Name="@{att2Name}" idVerification="@{idVerification}"
+                                    saveButtonXpath="@{saveButtonXpath}"/>
     </sequential>
   </macrodef>
 
@@ -385,7 +396,7 @@
               <verifyProperty name="checkSearch" text="true" />
             </condition>
             <then>
-              <verifyXPath xpath="//div[contains(@id, &quot;@{pos}:serviceTags&quot;)]//a[contains(text(),'${service.tags}')]" />
+              <verifyXPath xpath="//div[contains(@id, &quot;service@{pos}Tags&quot;)]//a[contains(text(),'${service.tags}')]" />
             </then>
             <else>
               <verifyElementText description="Verify note text of tags exist" text="${service.tags}:" htmlId="service@{pos}Tags" />
@@ -398,7 +409,7 @@
               <verifyProperty name="checkSearch" text="true" />
             </condition>
             <then>
-              <verifyXPath xpath="//div[contains(@id, &quot;@{pos}:serviceTags&quot;)]//a[contains(text(),'@{tag}')]" />
+              <verifyXPath xpath="//div[contains(@id, &quot;service@{pos}Tags&quot;)]//a[contains(text(),'@{tag}')]" />
             </then>
             <else>
               <verifyElementText description="Verify given tag exist" htmlId="service@{pos}Tags" text=".*@{tag}.*" regex="true" />

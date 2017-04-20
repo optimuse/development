@@ -331,6 +331,10 @@
   <target name="package" depends="_log, _dependencies, _copyDocument" description="Resolves dependencies, compiles, creates javadoc and packages">
     <buildproject target="package" />
   </target>
+  
+  <target name="package_without_doc" depends="_log, _dependencies" description="Resolves dependencies, compiles, creates javadoc and packages">
+    <buildproject target="package" />
+  </target>
 
   <target name="clean">
     <delete dir="${result.dir}" />
@@ -377,6 +381,15 @@
 
   <target name="unittests" depends="_log, _dependencies" description="Resolves dependencies, runs unittests">
     <buildproject target="unittests" />
+    <createtestreport />
+    <antcall target="merge"/>
+    <antcall target="checkUnitResult">
+      <param name="unit.result.dir" location="${result.reports.test.dir}" />
+    </antcall>
+  </target>
+
+  <target name="travisunittests" depends="_log, _dependencies" description="Resolves dependencies, runs unittests">
+    <buildproject target="travistests" />
     <createtestreport />
     <antcall target="merge"/>
     <antcall target="checkUnitResult">
