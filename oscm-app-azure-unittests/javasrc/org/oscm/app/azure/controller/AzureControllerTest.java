@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import org.oscm.app.azure.AzureCommunication;
 import org.oscm.app.azure.data.FlowState;
-import org.oscm.app.azure.exception.AzureClientException;
 import org.oscm.app.v1_0.data.InstanceDescription;
 import org.oscm.app.v1_0.data.InstanceStatus;
 import org.oscm.app.v1_0.data.InstanceStatusUsers;

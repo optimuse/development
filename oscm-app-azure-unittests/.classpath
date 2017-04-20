@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="javasrc"/>
 	<classpathentry kind="src" path="javares"/>
+    <classpathentry combineaccessrules="false" kind="src" path="/oscm-app-azure"/>
 	<classpathentry kind="lib" path="/libraries/slf4j/javalib/slf4j-api-1.7.7.jar"/>
 	<classpathentry kind="lib" path="/libraries/slf4j-log4j/javalib/slf4j-log4j12-1.7.7.jar"/>
 	<classpathentry kind="lib" path="/libraries/apache-commons-lang/javalib/commons-lang3-3.3.2.jar"/>
@@ -25,6 +26,8 @@
     <classpathentry kind="lib" path="/libraries/asm-minidev/javalib/asm-1.0.2.jar"/>
     <classpathentry kind="lib" path="/libraries/jersey-bundle/javalib/jersey-bundle-1.18.1.jar"/>
     <classpathentry kind="lib" path="/libraries/apache-lang/javalib/commons-lang-2.6.jar"/>
+    <classpathentry kind="lib" path="/libraries/junit/javalib/junit-4.5.jar"/>
+    <classpathentry kind="lib" path="/libraries/mockito/javalib/mockito-all-1.8.5.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/oscm-app-extsvc-1-0"/>
     <classpathentry kind="lib" path="/libraries/glassfish4/javalib/javaee.jar"/>
 	<classpathentry kind="output" path="bin"/>
