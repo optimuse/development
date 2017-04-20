@@ -10,6 +10,7 @@
 	<classpathentry kind="lib" path="/libraries/apache-httpcore/javalib/httpclient-4.5.2.jar"/>
 	<classpathentry kind="lib" path="/libraries/jackson-core-asl/javalib/jackson-core-asl-1.9.13.jar"/>
 	<classpathentry kind="lib" path="/libraries/jackson-mapper-asl/javalib/jackson-mapper-asl-1.9.13.jar"/>
+	<classpathentry kind="lib" path="/libraries/jboss-richfaces/javalib/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="/libraries/azure-core/javalib/azure-core-0.9.7.jar"/>
 	<classpathentry kind="lib" path="/libraries/azure-mgmt-resources/javalib/azure-mgmt-resources-0.9.7.jar"/>
 	<classpathentry kind="lib" path="/libraries/azure-mgmt-network/javalib/azure-mgmt-network-0.9.7.jar"/>
