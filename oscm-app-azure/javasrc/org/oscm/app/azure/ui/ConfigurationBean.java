@@ -1,13 +1,11 @@
 /*******************************************************************************
  *
- *  COPYRIGHT (C) FUJITSU LIMITED - ALL RIGHTS RESERVED.                  
+ *  Copyright FUJITSU LIMITED 2017
  *
- *  Sample controller implementation for the 
- *  Asynchronous Provisioning Platform (APP)
- *
- *  Creation Date: 2012-09-06                                                      
+ *  Creation Date: 2012-09-06
  *
  *******************************************************************************/
+
 package org.oscm.app.azure.ui;
 
 import java.util.ArrayList;
