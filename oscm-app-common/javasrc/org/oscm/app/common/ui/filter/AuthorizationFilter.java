@@ -88,7 +88,7 @@ public class AuthorizationFilter implements Filter {
 
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession();
-        if ((path != null && path.matches("/serverInformation.jsf"))) {
+        if ((path != null && path.matches(".*/serverInformation.*"))) {
             if (checkToken(httpRequest)) {
                 chain.doFilter(httpRequest, response);
                 return;
@@ -136,8 +136,7 @@ public class AuthorizationFilter implements Filter {
                                 // It worked! => store credentials in session
                                 // for
                                 // later use
-                                session.setAttribute("loggedInUserId",
-                                        username);
+                                session.setAttribute("loggedInUserId", username);
                                 session.setAttribute("loggedInUserPassword",
                                         password);
                                 session.setAttribute("loggedInUserLocale",
@@ -161,9 +160,11 @@ public class AuthorizationFilter implements Filter {
         if (clientLocale.equals(LOCALE_JA)) {
             clientLocale = LOCALE_DEFAULT;
         }
-        httpResponse.setHeader("WWW-Authenticate",
+        httpResponse.setHeader(
+                "WWW-Authenticate",
                 "Basic realm=\""
-                        + Messages.get(clientLocale, "ui.config.authentication")
+                        + Messages
+                                .get(clientLocale, "ui.config.authentication")
                         + "\"");
         httpResponse.setStatus(401);
         httpResponse.setContentType("text/html");
